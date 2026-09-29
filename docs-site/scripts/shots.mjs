@@ -74,8 +74,8 @@ try {
     await page.goto(`http://localhost:${PORT}${shot.at}`, { waitUntil: 'networkidle' });
     await page.waitForSelector('.track', { timeout: 15000 }).catch(() => {});
     if (shot.prepare) await shot.prepare(page);   // no catch: a step that cannot run is a broken shot
-    // The status bar names the version, which would make every release a screenshot change.
-    await page.addStyleTag({ content: '.shell-version{visibility:hidden}' });
+    // Remove the version from layout too: hidden proportional digits still shift the model status.
+    await page.addStyleTag({ content: '.shell-version{display:none}' });
     await wait(900);                                   // let layout and any transition settle
     const file = path.join(out, `${shot.name}.png`);
     const had = existsSync(file) ? digest(file) : null;
