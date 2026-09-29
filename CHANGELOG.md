@@ -1,3 +1,9 @@
+# 0.45.1 — public launch documentation
+
+- Include the complete Apache-2.0 license text.
+- Explain local setup, the hosted boundary and draft-format limitations in the open-source guide.
+- Document a source-backed release workflow example and distinguish inferred risks from observed incidents.
+
 # 0.45.0 — public source release
 
 - Apache-2.0 source release with a clean public history and the Staves format v0.1 draft.
