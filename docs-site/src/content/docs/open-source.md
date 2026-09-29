@@ -5,6 +5,8 @@ description: What is open, where local boards live, and what changes when you co
 
 Staves is **open core**. The format, analyzers, interview method, editor, MCP server and CLI are Apache-2.0 software. You can use them with your own coding agent or model key, without a Staves account.
 
+[See a real workflow: when a release is only half available](/docs/examples/release-workflow/). The example includes a source reference, a downloadable board, and the recovery question it leaves open.
+
 ## Start with your coding agent
 
 You need Node.js 20 or later and a coding agent such as Claude Code, Codex, Gemini CLI or Cursor. In the project you want to describe:

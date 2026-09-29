@@ -1,0 +1,270 @@
+{
+  "$schema": "https://staves.io/spec/0.1/board.schema.json",
+  "staves": "0.1",
+  "id": "release-workflow",
+  "title": "Get a release to its users",
+  "goal": "People can download the app and install the same version from npm.",
+  "stance": "as-is",
+  "tracks": [
+    {
+      "id": "release",
+      "name": "Release automation",
+      "kind": "system",
+      "description": "GitHub Actions starts on a version tag."
+    },
+    {
+      "id": "users",
+      "name": "People using Staves",
+      "kind": "outside",
+      "description": "Download and installation routes inferred from the release outputs; no user interviews."
+    }
+  ],
+  "artifacts": [
+    {
+      "id": "tag",
+      "name": "Version tag",
+      "kind": "record",
+      "external": true,
+      "livesIn": "GitHub repository"
+    },
+    {
+      "id": "download-2",
+      "name": "Downloadable app",
+      "kind": "document",
+      "livesIn": "GitHub release: staves.html"
+    },
+    {
+      "id": "package",
+      "name": "Installable package",
+      "kind": "data",
+      "livesIn": "npm registry"
+    }
+  ],
+  "jobs": [
+    {
+      "id": "download",
+      "name": "Make the app downloadable",
+      "track": "release",
+      "outcome": "A tagged version has a public release with the downloadable app attached.",
+      "beneficiary": "People who download the app",
+      "doneWhen": [
+        "The release action completes with staves.html attached."
+      ],
+      "inputs": [
+        "tag"
+      ],
+      "outputs": [
+        "download-2"
+      ],
+      "trigger": "event",
+      "triggerNote": "A v* tag is pushed.",
+      "exits": [
+        {
+          "condition": "Release action succeeds",
+          "target": "install"
+        }
+      ],
+      "tools": [
+        {
+          "name": "GitHub release action",
+          "reach": "api",
+          "does": "Publishes staves.html and generated release notes for the tag.",
+          "limits": "Does not establish that the npm publication later succeeds."
+        }
+      ],
+      "status": "draft",
+      "refs": [
+        {
+          "type": "code",
+          "path": ".github/workflows/release.yml",
+          "symbol": "jobs.publish.steps"
+        }
+      ],
+      "provenance": {
+        "*": {
+          "method": "code",
+          "by": "agent:Codex release workflow review",
+          "at": "2026-09-29T12:42:17.557Z"
+        }
+      },
+      "extensions": {
+        "io.staves.detail": {
+          "checks": [
+            {
+              "rule": "Tag equals package version; install, build, tests and package boundary check succeed.",
+              "onFail": "Later release steps are not reached."
+            }
+          ]
+        },
+        "io.staves.app": {
+          "provenance": {
+            "source": "agent",
+            "by": "Codex release workflow review",
+            "at": "2026-09-29T12:42:17.557Z"
+          },
+          "implementation": {
+            "state": "implemented",
+            "note": "Sequence exists in the pinned workflow; no execution evidence inspected."
+          },
+          "rationale": "Build and validation are tasks within making the app available; they do not deliver separate user outcomes."
+        }
+      }
+    },
+    {
+      "id": "install",
+      "name": "Make the package installable",
+      "track": "release",
+      "outcome": "People can install the tagged package version from npm.",
+      "beneficiary": "People installing Staves with npm",
+      "doneWhen": [
+        "npm publish --access public --provenance succeeds."
+      ],
+      "inputs": [
+        "tag"
+      ],
+      "outputs": [
+        "package"
+      ],
+      "trigger": "chain",
+      "triggerNote": "After the GitHub release action succeeds.",
+      "prerequisites": {
+        "kind": "all",
+        "inputs": [
+          "tag"
+        ]
+      },
+      "tools": [
+        {
+          "name": "npm registry",
+          "reach": "api",
+          "does": "Accepts the package publication with public access and provenance, or returns an error.",
+          "limits": "A later publication failure does not undo the earlier GitHub release; recovery is not specified in this workflow."
+        }
+      ],
+      "status": "draft",
+      "refs": [
+        {
+          "type": "code",
+          "path": ".github/workflows/release.yml",
+          "symbol": "jobs.publish.steps"
+        }
+      ],
+      "provenance": {
+        "*": {
+          "method": "code",
+          "by": "agent:Codex release workflow review",
+          "at": "2026-09-29T12:42:17.575Z"
+        }
+      },
+      "extensions": {
+        "io.staves.app": {
+          "provenance": {
+            "source": "agent",
+            "by": "Codex release workflow review",
+            "at": "2026-09-29T12:42:17.575Z"
+          },
+          "implementation": {
+            "state": "implemented",
+            "note": "Publication command exists in the pinned workflow; no registry failure was observed."
+          },
+          "rationale": "Runs after the GitHub release action succeeds, using the tagged package built in the same automation job."
+        }
+      }
+    },
+    {
+      "id": "use",
+      "name": "Choose a distribution route",
+      "track": "users",
+      "kind": "outside",
+      "outcome": "A person obtains Staves through the download or package route.",
+      "beneficiary": "People using Staves",
+      "doneWhen": [
+        "The chosen route provides the requested version."
+      ],
+      "inputs": [
+        "download-2",
+        "package"
+      ],
+      "outputs": [],
+      "trigger": "hand",
+      "prerequisites": {
+        "kind": "any",
+        "inputs": [
+          "download-2",
+          "package"
+        ]
+      },
+      "status": "draft",
+      "provenance": {
+        "*": {
+          "method": "inferred",
+          "by": "agent:Codex release workflow review",
+          "at": "2026-09-29T12:42:17.592Z"
+        }
+      },
+      "extensions": {
+        "io.staves.app": {
+          "provenance": {
+            "source": "agent",
+            "by": "Codex release workflow review",
+            "at": "2026-09-29T12:42:17.592Z"
+          },
+          "implementation": {
+            "state": "unknown",
+            "note": "Recipient behavior is inferred from outputs; it was not observed or interviewed."
+          },
+          "rationale": "One route is sufficient for a person. Matching availability across both routes is a separate release concern."
+        }
+      }
+    }
+  ],
+  "extensions": {
+    "io.staves.app": {
+      "ids": {
+        "artifact": {
+          "download-2": "download"
+        }
+      },
+      "origin": "Code review of public .github/workflows/release.yml at v0.45.0 (f23c6ee70619f07e15eba63b50dd3ff607f1a583). Draft model; no production run was inspected.",
+      "context": {
+        "agentProgress": {
+          "state": "ready",
+          "summary": "Ready for human review. Draft source-derived model of the v0.45.0 release workflow. Recovery ownership is unresolved; no production execution was inspected.",
+          "updatedAt": "2026-09-29T12:45:51.047Z"
+        }
+      },
+      "questions": [
+        {
+          "id": "q:1790685737611",
+          "about": "install",
+          "askedBy": "agent",
+          "text": "If npm publication fails after the GitHub release exists, who restores matching availability, and what tells people which installation route is ready? This workflow does not specify recovery.",
+          "at": "2026-09-29T12:42:17.611Z"
+        }
+      ]
+    }
+  },
+  "handoffs": [
+    {
+      "id": "download>install!0",
+      "from": "download",
+      "to": "install",
+      "kind": "exit",
+      "condition": "Release action succeeds"
+    },
+    {
+      "id": "download>use@download-2",
+      "from": "download",
+      "to": "use",
+      "kind": "artifact",
+      "artifact": "download-2"
+    },
+    {
+      "id": "install>use@package",
+      "from": "install",
+      "to": "use",
+      "kind": "artifact",
+      "artifact": "package"
+    }
+  ]
+}
