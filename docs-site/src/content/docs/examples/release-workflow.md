@@ -13,7 +13,7 @@ This example is for people already working with a coding agent. It shows what a 
 
 ## What the source says
 
-In the [v0.45.0 release workflow](https://github.com/jameshaliburton/staves/blob/f23c6ee70619f07e15eba63b50dd3ff607f1a583/.github/workflows/release.yml#L14-L31), a version tag starts validation, builds the downloadable app, creates its GitHub release, and **then** publishes the package to npm.
+In the [v0.45.0 release workflow](https://github.com/jameshaliburton/staves/blob/622572fa61ba75b9c14d9958826d19f9aa09e09d/.github/workflows/release.yml#L14-L31), a version tag starts validation, builds the downloadable app, creates its GitHub release, and **then** publishes the package to npm.
 
 That order matters. If package publication fails after the GitHub release succeeds, the download can already be public while that package version is unavailable from npm. The workflow does not specify a recovery step or who owns restoring matching availability.
 
