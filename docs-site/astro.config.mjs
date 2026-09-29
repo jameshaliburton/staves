@@ -28,6 +28,7 @@ export default defineConfig({
           items: [
             { label: 'Your first session', slug: 'first-session' },
             { label: 'What Staves is for', slug: 'start' },
+            { label: 'Use Staves without an account', slug: 'open-source' },
             { label: 'Start with one human outcome', slug: 'first-board' },
           ],
         },

@@ -14,7 +14,7 @@ A board is one workflow drawn as the people, agents and systems in it, the jobs 
 
 The approval page can create a board for the project, named after its directory; when the connection opens just that board, the terminal comes back with its link.
 
-Working without an account? `npx @staves/cli init` keeps boards in `.staves/` next to the code, and everything below works the same.
+Working without an account? [Start locally](/docs/open-source/) with `npx @staves/cli init` to keep boards in `.staves/` next to the code. Reload or approve the local MCP connection in your agent. Account approval and hosted connection instructions below apply only if you choose to connect.
 
 The agent reads your code with its own model and draws one workflow as a board. No separate AI provider key is needed.
 
