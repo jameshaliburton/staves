@@ -26,8 +26,9 @@ Apache-2.0.
 
 Each field can record its source: an interview, something a person drew, a document, the code,
 an execution trace, or an inference to confirm. When sources disagree, for example when the
-code refunds automatically but the support lead says every refund is checked, the board keeps
-both claims until a person settles it.
+code refunds automatically but the support lead says every refund is checked, the format can
+record both claims until a person settles it. The current Staves implementation presents a dispute
+as an open question and does not yet preserve the competing claims on round-trip.
 
 ## As it is, or as it should be
 
@@ -37,5 +38,12 @@ what it adds, moves or removes.
 
 ## Status
 
-Version 0.1 is a draft for comment. The specification, JSON Schema and mappings to MCP, A2A,
-OpenTelemetry, BPMN and W3C PROV will be published with the public source repository.
+Version 0.1 is a **draft for comment**. Breaking changes are expected before 1.0. The
+[specification](https://github.com/jameshaliburton/staves/blob/main/spec/README.md),
+[JSON Schema](https://staves.io/spec/0.1/board.schema.json) and
+[mappings](https://github.com/jameshaliburton/staves/blob/main/spec/MAPPINGS.md) are public.
+
+Staves itself is not yet a fully conforming consumer. In addition to the dispute limitation above,
+preservation of unknown extensions, evidence, references and provenance is incomplete when saving
+through a Staves store. Read the specification's conformance notice before relying on lossless interchange.
+See [Use Staves without an account](/docs/open-source/) for the open tools and hosted boundary.
