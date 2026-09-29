@@ -1,5 +1,6 @@
 import { defineConfig } from 'astro/config';
 import starlight from '@astrojs/starlight';
+import { unified } from '@astrojs/markdown-remark';
 
 // Built into the gateway's own public directory, so the docs ship with the site rather than as a
 // second deployment. Search is Pagefind, which is indexed at build time and served as static files —
@@ -9,11 +10,13 @@ export default defineConfig({
   base: '/docs',
   outDir: '../public/docs',
   trailingSlash: 'ignore',
+  // Preserve the existing Markdown plugins and inline whitespace on Astro 7.
+  markdown: { processor: unified() },
+  compressHTML: true,
   integrations: [
     starlight({
       title: 'Staves',
       description: 'Describe how work happens — who does what, what passes between them, where it stalls.',
-      tagline: 'Draw the work as the people in it experience it.',
       social: [{ icon: 'external', label: 'Open Staves', href: 'https://staves.io/workspace' }],
       editLink: undefined,
       lastUpdated: true,

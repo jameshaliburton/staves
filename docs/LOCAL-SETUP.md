@@ -54,5 +54,5 @@ A coding agent can use its own model to interview you through the tools. The con
 
 - `npm run test:editor` runs editor tests.
 - `node dist/cli.js gym` runs the interviewer gym after a build.
-- `npm run build:site` installs and builds the user documentation under `docs-site/`.
+- `npm run build:site` installs and builds the user documentation under `docs-site/`. This optional docs build requires Node.js 22.12 or later and npm 9.6.5 or later; the CLI runtime still supports Node.js 20 or later.
 - The standalone HTML build uses the legacy shell; see [publishing](PUBLISH.md). Use the preview above when working on the main editor.

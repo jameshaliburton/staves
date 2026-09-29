@@ -21,6 +21,8 @@ jobs:
       - run: npm ci
       - run: npm run build
       - run: npm --prefix docs-site ci --no-audit --no-fund
+      - name: build the documentation and format schema
+        run: npm --prefix docs-site run build
       # The browser download is cached by the lockfile; the system libraries it needs are not, so a cache
       # hit still installs those.
       - id: browser

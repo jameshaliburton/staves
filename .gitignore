@@ -29,3 +29,4 @@ docs-site/.shots-check/
 # Local assistant output and compiler caches
 Claude outputs/
 *.tsbuildinfo
+docs-site/.astro/
