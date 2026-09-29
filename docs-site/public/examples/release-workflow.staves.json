@@ -225,7 +225,7 @@
           "download-2": "download"
         }
       },
-      "origin": "Code review of public .github/workflows/release.yml at v0.45.0 (f23c6ee70619f07e15eba63b50dd3ff607f1a583). Draft model; no production run was inspected.",
+      "origin": "Code review of public .github/workflows/release.yml at v0.45.0 (622572fa61ba75b9c14d9958826d19f9aa09e09d). Draft model; no production run was inspected.",
       "context": {
         "agentProgress": {
           "state": "ready",

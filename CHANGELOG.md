@@ -1,3 +1,7 @@
+# 0.45.2 — correct the example source link
+
+- Cite the release workflow commit rather than its annotated tag object, so the source link resolves on GitHub.
+
 # 0.45.1 — public launch documentation
 
 - Include the complete Apache-2.0 license text.
