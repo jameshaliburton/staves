@@ -1,0 +1,196 @@
+#tl{position:relative}#empty-start{position:absolute;z-index:3;top:90px;left:50%;transform:translateX(-50%);width:min(520px,calc(100% - 40px));padding:28px;box-sizing:border-box;border:1px solid var(--line);border-radius:12px;background:var(--b0);box-shadow:0 6px 24px #19232e06}#empty-start[hidden]{display:none}#empty-start h2{font-size:23px;line-height:1.3;margin:20px 0 12px;letter-spacing:-.025em}#empty-start p{font-size:13px;line-height:1.6;color:var(--t2);margin:0 0 18px}#empty-start .empty-goal-summary{color:var(--t1);font-size:15px}#empty-start label{display:block;font-size:12px;font-weight:600;margin-bottom:8px}#empty-start textarea{width:100%;box-sizing:border-box;border:1px solid var(--line2);border-radius:7px;font:inherit;padding:12px;resize:vertical;margin-bottom:14px;background:white;color:var(--t1)}.empty-sequence{display:flex;gap:10px;align-items:center;color:var(--t2);font-size:11px}.empty-sequence span{border:1px solid var(--line);padding:8px 12px;border-radius:5px;background:white}.empty-sequence i{font-style:normal;color:var(--t3)}.empty-alternatives{border-top:1px solid var(--line);margin-top:22px;padding-top:14px;display:flex;gap:10px;flex-wrap:wrap}.empty-alternatives .bt{font-size:11px}#empty-goal-error{color:#a43245!important}#tl:has(#empty-start:not([hidden])) #tracks{visibility:hidden}#empty-start :focus-visible{outline:2px solid var(--acc);outline-offset:3px}@media(max-height:650px){#empty-start{top:60px;max-height:calc(100% - 80px);overflow:auto}}@media(max-width:600px){#empty-start{top:110px;padding:20px}#empty-start h2{font-size:21px}}
+#workflow-journey{flex-shrink:0;display:flex;align-items:center;gap:10px;padding:9px 18px;border-bottom:1px solid var(--line);background:var(--b0);min-height:34px;flex-wrap:wrap}.journey-stages{display:flex;align-items:center;gap:10px;color:var(--t3);font-size:10px}.journey-stages span{display:flex;align-items:center;gap:6px}.journey-stages b{font-weight:500}.journey-stages .current{color:var(--t1)}.journey-stages .current b{font-weight:650}.journey-stages i{font-style:normal;color:var(--line2)}.journey-evidence{margin-left:auto;font-size:11px;color:var(--t2)}#workflow-journey .bt{height:28px;font-size:11px}#empty-start{top:145px}@media(max-width:750px){#workflow-journey{padding:8px 10px;gap:8px}.journey-stages{width:100%}.journey-evidence{margin-left:0;margin-right:auto}#empty-start{top:210px;max-height:calc(100% - 225px);overflow:auto}}@media(max-height:700px){#empty-start{max-height:calc(100% - 165px);overflow:auto}}
+#live-draft-graph{position:absolute;left:18px;right:18px;top:145px;z-index:4;background:var(--b0);border:1px solid #b9c9c6;border-radius:10px;padding:16px;box-shadow:0 10px 30px #19232e0b;max-height:calc(100% - 175px);overflow:auto}#live-draft-graph[hidden]{display:none}#live-draft-graph header{display:flex;align-items:center;justify-content:space-between;gap:12px}#live-draft-graph header>div{display:grid;gap:5px}#live-draft-graph strong{font-size:14px}#live-draft-graph span,#live-draft-graph>small{font-size:11px;color:var(--t2)}.draft-graph-scroll{overflow:auto;margin:16px 0}.draft-graph-scroll svg{display:block;width:100%;min-width:420px;max-height:450px}.draft-node rect{fill:#f4f8f7;stroke:#76968d;stroke-dasharray:5 4}.draft-node.anchor rect{fill:#fff;stroke:#c8ced8;stroke-dasharray:none}.draft-node text{fill:var(--t1);font-size:12px}.draft-node .draft-kind{font-size:8px;letter-spacing:.06em;fill:#60786f}.draft-role{font-size:11px;fill:#64717e}.draft-node{animation:draft-appear .3s ease-out}@keyframes draft-appear{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}@media(prefers-reduced-motion:reduce){.draft-node{animation:none}}@media(max-width:750px){#live-draft-graph{top:210px;max-height:calc(100% - 230px)}}
+#tl:has(#live-draft-graph:not([hidden])) #empty-start{display:none}body:has(#conversation-panel.open) #tl>.ph{height:auto;min-height:48px;padding-top:8px;padding-bottom:8px}#conversation-panel #iv .iv-scope-picker{flex:1 1 100%;width:100%}#conversation-panel #ivscope{flex:1;max-width:100%;width:100%;min-width:140px}
+/* The chat and canvas share the workspace. Only editing chrome recedes. */
+#focused-interview-header,#interview-canvas-heading,#interview-canvas-waiting{display:none}
+body.interview-focus #workflow-journey,body.interview-focus #empty-start,body.interview-focus #iv>.bar{display:none!important}
+body.interview-focus #conversation-panel #iv{background:#fff}
+body.interview-focus #focused-interview-header{display:flex;align-items:center;justify-content:space-between;padding:20px 24px;border-bottom:1px solid var(--line);margin:0;flex:none;background:#fff;gap:16px}
+#focused-interview-header>div{display:grid;gap:5px}#focused-interview-header strong{font-size:16px}#focused-interview-header span{font-size:12px;color:var(--t2)}
+body.interview-focus #interview-canvas-heading{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:24px;border-bottom:1px solid var(--line);flex:none;background:#fff}
+#interview-canvas-heading small{font-size:10px;letter-spacing:.08em;color:var(--t2)}#interview-canvas-heading h2{font-size:17px;line-height:1.4;margin:6px 0 0}#interview-canvas-heading>span{font-size:11px;color:var(--t2);white-space:nowrap}
+body.interview-focus #interview-canvas-waiting:not([hidden]){display:grid;justify-items:center;text-align:center;gap:14px;position:absolute;top:35%;left:15%;right:15%;color:var(--t2)}#interview-canvas-waiting strong{font-size:16px;font-weight:500}#interview-canvas-waiting p{font-size:13px;line-height:1.6;max-width:34ch;margin:0}.canvas-seed{width:86px;height:42px;border:1px dashed #9eaaa9;border-radius:8px;background:#f4f8f7;margin-bottom:8px}
+body.interview-focus #live-draft-graph{top:115px;max-height:calc(100% - 140px);box-shadow:none;background:#fff;border-color:var(--line)}
+body.interview-focus #conversation-panel #iv .tx{padding:24px;box-sizing:border-box;width:100%}
+body.interview-focus #iv .tx>h4,body.interview-focus #iv .tx>div:first-of-type,body.interview-focus #iv-implementation-requests{display:none}
+body.interview-focus #ivlines .line{display:flex;flex-direction:column;gap:8px;border:0;padding:0;margin:0 0 26px;align-items:flex-start}
+body.interview-focus #ivlines .who{font-size:11px;font-weight:600;color:var(--t2);width:auto}
+body.interview-focus #ivlines .say{font-size:15px;line-height:1.7;color:var(--t1);white-space:pre-wrap;overflow-wrap:anywhere;max-width:100%;box-sizing:border-box}
+body.interview-focus #ivlines .line:not(.q){align-items:flex-end}body.interview-focus #ivlines .line:not(.q) .say{background:#f0f3f8;padding:12px 16px;border-radius:12px 12px 3px 12px}
+body.interview-focus #conversation-panel #iv>.ask{padding:16px 24px;background:#fff}
+body.interview-focus #iv .ask .box{align-items:flex-end;padding:10px;border-radius:10px}body.interview-focus #ivin{font:inherit;font-size:14px;line-height:1.6;flex:1;min-width:0;resize:vertical;max-height:180px;min-height:46px;border:0;outline:none;background:transparent;color:var(--t1);padding:2px 4px;box-sizing:border-box}body.interview-focus #ivstate{line-height:1.5}
+#interview-suggestions{margin:0 24px 24px;border:1px solid var(--line);border-radius:8px;background:#fff}#interview-suggestions[hidden]{display:none}#interview-suggestions>summary{padding:14px;font-size:12px;font-weight:600;cursor:pointer}#interview-suggestions .form{border-top:1px solid var(--line)}
+#iv-streaming .say:empty::before{content:'Thinking…';color:var(--t2)}
+@media(min-width:751px){body.interview-focus #ws{grid-template-columns:minmax(0,1fr) min(500px,44vw)!important}body.interview-focus #conversation-panel:has(#iv){width:min(500px,44vw)}}
+@media(max-width:750px){body.interview-focus #ws{display:block!important}body.interview-focus #tl{height:32dvh!important;min-height:0}body.interview-focus #conversation-panel:has(#iv){top:calc(62px + 32dvh);width:100%;bottom:28px;border-top:1px solid var(--line)}body.interview-focus #interview-canvas-heading{padding:10px 16px}#interview-canvas-heading h2{font-size:13px}#interview-canvas-heading>span{display:none}body.interview-focus #live-draft-graph{top:68px;max-height:calc(100% - 80px);padding:10px}body.interview-focus #interview-canvas-waiting:not([hidden]){top:80px;gap:5px}.canvas-seed{display:none}#interview-canvas-waiting strong{font-size:13px}#interview-canvas-waiting p{font-size:11px}body.interview-focus #focused-interview-header{padding:12px 16px}body.interview-focus #conversation-panel #iv .tx{padding:16px}body.interview-focus #conversation-panel #iv>.ask{padding:12px 16px}}
+body.interview-focus #tl:has(#live-draft-graph:not([hidden])) #tls{visibility:hidden}
+body.interview-focus #live-draft-graph{z-index:45}
+#iv .compact-changes{padding:0 24px 16px!important;border:0!important;background:transparent!important}#iv .compact-changes>h5,#iv .compact-changes>#iv-board-work{display:none}#iv .compact-changes[hidden]{display:none}#interview-build-controls{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 24px;border-bottom:1px solid var(--line);flex:none;background:#fff;font-size:12px}#interview-build-controls label{display:flex;align-items:center;gap:8px;cursor:pointer}#interview-auto-build{accent-color:var(--acc)}.compact-change{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:9px 0;border-bottom:1px solid var(--line);font-size:12px}.compact-change-name{flex:1;min-width:120px;font-weight:500}.compact-change .bt{height:28px;font-size:11px;padding:0 9px}.compact-inspect{border:0;background:transparent;color:var(--t2);font:inherit;font-size:11px;padding:5px;cursor:pointer;text-decoration:underline;text-underline-offset:3px}.compact-saved{font-size:11px;color:var(--t2)}.compact-change small{flex-basis:100%;color:#a43245}#interview-build-receipt{display:flex;gap:10px;align-items:center;padding:8px 24px;background:#f4f8f7;font-size:11px;color:var(--t2);flex:none}#interview-build-receipt[hidden]{display:none}#interview-build-receipt>span{flex:1;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+@media(min-width:751px){body.interview-focus:has(#conversation-panel.open #iv) #ws{grid-template-columns:minmax(0,1fr) min(500px,44vw)!important}}
+.interview-header-actions{display:flex!important;gap:8px!important}.draft-node[role=button]{cursor:pointer}.draft-node[role=button]:focus rect{stroke:var(--acc);stroke-width:2}body.interview-focus #tl:has(#live-draft-graph:not([hidden])) #mm{display:none}
+#draft-review[hidden]{display:none!important}body.interview-focus #tl:has(#live-draft-graph:not([hidden])) #mm{display:none!important}
+/* Existing objects remain still; only genuinely changed nodes and links receive emphasis. */
+#live-draft-graph .draft-node{animation:none}#live-draft-graph .canvas-changed rect{stroke:#315dcc;stroke-width:2;fill:#edf2ff;animation:canvas-node-arrive .4s ease-out}#live-draft-graph .canvas-link-changed{stroke:#315dcc;stroke-width:2;animation:canvas-link-arrive .5s ease-out}#canvas-activity{position:absolute;left:24px;bottom:24px;z-index:46;display:flex;align-items:center;gap:9px;padding:10px 14px;border:1px solid #d8e0ef;border-radius:20px;background:#fff;color:#43526c;font-size:12px;box-shadow:0 3px 12px #23334b0a;pointer-events:none}#canvas-activity[hidden]{display:none}#canvas-activity::before{content:'';width:7px;height:7px;border-radius:50%;background:#315dcc}#canvas-activity.working::before{animation:canvas-thinking 1.4s ease-in-out infinite}@keyframes canvas-thinking{50%{opacity:.3;transform:scale(.75)}}@keyframes canvas-node-arrive{from{opacity:.3;stroke-width:4}to{opacity:1;stroke-width:2}}@keyframes canvas-link-arrive{from{opacity:.15}to{opacity:1}}@media(prefers-reduced-motion:reduce){#canvas-activity.working::before,#live-draft-graph .canvas-changed rect,#live-draft-graph .canvas-link-changed{animation:none}}@media(max-width:750px){#canvas-activity{left:16px;bottom:8px;font-size:11px;padding:6px 10px}}
+/* Containment is spatial, never a misleading sequence of task-to-task lines. */
+#live-draft-graph .draft-graph-scroll svg{max-height:none;min-width:540px}#live-draft-graph .draft-job-group{pointer-events:none}
+
+/* One native canvas, including while interviewing. */
+body.interview-focus #interview-canvas-heading{display:none}
+.show-canvas-tasks .clip .canvas-tasks,body[data-detail=tasks] .clip .canvas-tasks{top:calc(100% + 8px);bottom:auto;left:0;right:0;height:auto;display:flex;flex-direction:column;gap:5px;overflow:visible}
+.show-canvas-tasks .canvas-task,body[data-detail=tasks] .canvas-task{width:100%;max-width:none;min-height:30px;text-align:left;background:var(--b0);font-size:11px;border-radius:5px;padding:6px 8px}
+#show-canvas-tasks[aria-pressed=true]{background:#edf2ff;color:#315dcc;border-color:#aabce9}
+#tracks .canvas-changed{outline:2px solid #315dcc;box-shadow:0 0 0 5px #315dcc18}
+#tracks .clip .pin{background:#8c652b;color:white;cursor:pointer;z-index:5;min-width:17px;min-height:17px}#tracks .clip .pin:focus-visible{outline:2px solid #8c652b;outline-offset:3px}
+#noticed{border-color:#e5d8c4;background:#fffdf9;margin:0 0 20px}#noticed .ih{background:#faf5ec}#noticed .ih svg,#noticed .iss>svg,#noticed .iss>i{color:#8c652b!important}#noticed .iss{background:transparent}#noticed:focus{outline:2px solid #c3a576;outline-offset:2px}#stage .empty-task-chain{min-height:0;height:auto;margin-bottom:20px}#stage .empty-task-chain>*{min-height:36px;height:36px;width:auto}
+/* Panels own their content height; only the inspector as a whole scrolls. */
+#tl>.ph{height:auto!important;min-height:48px;flex:0 0 auto;flex-wrap:wrap;align-content:center;padding-top:8px;padding-bottom:8px;box-sizing:border-box;row-gap:8px;overflow:visible}
+#tl>.ph>*{max-width:100%;box-sizing:border-box}#tl>.ph>.seg{flex-shrink:0}
+#stage{min-width:0;min-height:0;overflow-y:auto!important;overflow-x:hidden!important;flex-direction:column;scroll-padding-top:58px}
+#stage>.ph{position:sticky;top:0;z-index:5;flex:0 0 auto;background:white}
+#stage #sh{height:auto!important;max-height:none!important;overflow:visible!important;flex:0 0 auto;min-width:0;box-sizing:border-box}
+#stage #sb{height:auto!important;max-height:none!important;overflow:visible!important;flex:0 0 auto;min-width:0;box-sizing:border-box}
+#stage .chips,#stage .rowb,#stage .ih{flex-wrap:wrap}#stage .chip{max-width:100%;box-sizing:border-box;white-space:normal;overflow-wrap:anywhere}#stage .iss .t{min-width:0;overflow-wrap:anywhere}
+#stage .chain{max-width:100%;box-sizing:border-box;overflow-x:auto}#stage .raise{min-width:0}#stage .raise input{min-width:0;width:100%}
+/* Question headers must contain wrapped actions instead of overlaying the input. */
+#stage .issues>.ih{height:auto!important;min-height:38px;box-sizing:border-box;padding:10px 12px;gap:8px;align-items:center;flex:0 0 auto}
+#stage .issues>.ih>.bt{height:auto!important;min-height:28px;margin:0;white-space:normal;flex-shrink:0}
+#stage .issues>.ih>.cnt{min-width:0;white-space:normal}
+#stage .issues>.raise{height:auto!important;min-height:44px;padding:10px 12px;box-sizing:border-box;display:flex;align-items:center;gap:8px}
+#stage .issues>.raise input{flex:1;min-width:0;padding:4px 0;line-height:1.5}
+/* Job focus is a workspace, with the same conversation rail beside it. */
+#work-space[hidden]{display:none}#work-space{grid-row:2;grid-column:1;min-width:0;min-height:0;display:flex;flex-direction:column;background:white;overflow:hidden}
+body.work-focus #tl,body.work-focus #stage,body.work-focus #ol{display:none!important}
+body.work-focus #ws,body.work-focus.interview-focus:has(#conversation-panel.open #iv) #ws{grid-template-columns:minmax(0,1fr)!important}
+body.work-focus.work-chat #ws,body.work-focus.work-chat.interview-focus:has(#conversation-panel.open #iv) #ws{grid-template-columns:minmax(0,1fr) min(440px,38vw)!important}
+body.work-focus #conversation-panel.open:has(#iv){width:min(440px,38vw);top:62px;bottom:29px}
+.work-header{flex:none;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:12px 20px;min-height:58px;box-sizing:border-box;border-bottom:1px solid var(--line)}.work-header nav{display:flex;align-items:center;gap:10px;min-width:0;font-size:12px;color:var(--t2)}.work-header nav strong,.work-crumb{max-width:240px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.work-crumb{border:0;background:none;font:inherit;color:var(--t1);cursor:pointer}.work-header>.bt{flex:none}
+.work-layout{display:grid;grid-template-columns:200px minmax(0,1fr);flex:1;min-height:0}.work-layout>nav{padding:18px 12px;background:#f8f9fb;border-right:1px solid var(--line);overflow:auto}.work-item{display:block;width:100%;padding:11px 10px;border:1px solid transparent;border-radius:6px;text-align:left;font:inherit;font-size:12px;line-height:1.5;background:transparent;margin-bottom:5px;color:var(--t1);cursor:pointer}.work-item.active{background:white;border-color:#cbd5e7;color:#315dcc}.work-item.drop-before{border-top:3px solid #315dcc}.work-nav-label{display:flex;justify-content:space-between;margin:24px 10px 10px;font-size:11px;color:var(--t2)}.work-nav-note{font-size:11px;line-height:1.6;color:var(--t2);padding:0 10px}
+#work-content{overflow:auto;padding:22px 28px;min-width:0}.work-view-tabs{display:flex;gap:6px;margin-bottom:26px}.work-view-tabs [aria-pressed=true]{background:#edf2ff;color:#315dcc;border-color:#b9c8e8}.work-layout form{display:flex;flex-direction:column;gap:18px;max-width:760px}.work-layout label{display:grid;gap:8px;font-size:12px;font-weight:500}.work-layout input,.work-layout textarea,.work-layout select{padding:10px 12px;border:1px solid var(--line);border-radius:6px;font:inherit;font-size:14px;color:var(--t1);background:white;width:100%;box-sizing:border-box}.work-layout small{font-size:10px;color:var(--t2);letter-spacing:.05em}.work-layout details{border-top:1px solid var(--line);padding-top:18px}.work-layout summary{cursor:pointer;font-size:13px;font-weight:600}.work-layout details[open]>label{margin-top:18px}.work-layout footer{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-top:10px}.work-layout footer span{font-size:11px;color:var(--t2)}
+.work-flow-summary h2{font-size:20px;line-height:1.5;margin:8px 0 28px;max-width:45ch}.work-flow-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px;align-items:stretch}.work-flow-task{display:flex;flex-direction:column;gap:12px;text-align:left;border:1px solid var(--line);border-left:3px solid #8798b1;border-radius:8px;background:white;padding:18px;color:var(--t1);font:inherit;cursor:pointer;min-height:130px}.work-flow-task:hover{border-color:#718ec9;background:#f8faff}.work-flow-task strong{font-size:13px;line-height:1.5}.work-flow-task span{font-size:11px;line-height:1.5;color:var(--t2);margin-top:auto}.work-flow-add{border:1px dashed var(--line2);border-radius:8px;background:#fafbfc;color:var(--t2);min-height:100px;font:inherit;font-size:12px;cursor:pointer}.work-flow-links{display:grid;gap:10px;margin-top:24px;font-size:12px;color:var(--t2)}.work-flow-links span{padding:0 8px;color:#315dcc}
+body.work-focus #focus-back{display:inline-flex}body.work-focus #focused-interview-header{padding:16px;gap:8px}body.work-focus #focused-interview-header>div:first-child{min-width:0}body.work-focus #focused-interview-header span{font-size:12px;line-height:1.4;overflow-wrap:anywhere}body.work-focus #conversation-panel #iv .tx{padding:18px}body.work-focus #conversation-panel #iv>.ask{padding:14px}body.work-focus #interview-build-controls{padding:10px 16px}
+@media(max-width:850px){.work-layout{grid-template-columns:155px minmax(0,1fr)}#work-content{padding:16px}.work-header{flex-wrap:wrap;padding:10px 14px}.work-header nav{flex-wrap:wrap}.work-header nav strong,.work-crumb{max-width:170px}body.work-focus.work-chat #ws,body.work-focus.work-chat.interview-focus:has(#conversation-panel.open #iv) #ws{grid-template-columns:minmax(0,1fr)!important}body.work-focus.work-chat #work-space{height:42dvh}body.work-focus.work-chat #conversation-panel.open:has(#iv){top:calc(62px + 42dvh);width:100%;border-top:1px solid var(--line)}body.work-focus.work-chat .work-layout>nav{display:none}body.work-focus.work-chat .work-layout{grid-template-columns:1fr}}
+body.work-focus .job-preview{display:none!important}
+
+#interview-build-controls{flex-wrap:wrap;gap:10px} .interview-header-actions{flex-wrap:wrap} #focused-interview-header{flex-shrink:0}
+
+#interview-activities{padding:12px 18px;border-bottom:1px solid var(--line,#dfe3ed);background:rgba(247,249,252,.8);flex-shrink:0}
+#interview-activities>div{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:5px}
+#interview-activities button{font:inherit;font-size:12px;text-align:left;padding:8px 10px;border:1px solid transparent;border-radius:6px;background:transparent;color:#566174;cursor:pointer}
+#interview-activities button[aria-pressed=true]{background:white;border-color:#a5b8ec;color:#2847a5;box-shadow:0 1px 3px #182d5010}
+#interview-activities button:focus-visible{outline:2px solid #3157dc;outline-offset:2px}
+#interview-activities button:disabled{opacity:.6;cursor:wait}
+#interview-activities p{font-size:12px;line-height:1.5;margin:8px 0 3px;color:#414c5e}
+#interview-activities small{font-size:11px;color:#667185}
+
+.assumption-label{display:block;font-size:11px;font-weight:400;color:#826329;margin-top:4px}
+
+#interview-checkpoint:not(:empty){flex-basis:100%;color:var(--t2);line-height:1.5;overflow-wrap:anywhere}
+@media(max-width:700px){
+ #interview-activities{padding:6px 12px}
+ #interview-activities button{padding:5px 8px;font-size:11px}
+ #interview-activities p,#interview-activities small{display:none}
+ #focused-interview-header{padding:10px 12px!important}
+ #focused-interview-header>div:first-child span{display:none}
+ #focused-interview-header .interview-header-actions{flex-wrap:nowrap}
+ #interview-build-controls{padding:6px 12px!important;gap:4px 10px}
+ #interview-checkpoint:not(:empty){font-size:11px}
+}
+
+/* The durable conversation: context, exchange, composer. Tools open only on request. */
+body.interview-focus #focused-interview-header{display:block;padding:16px 20px;position:relative;z-index:4}
+#focused-interview-header .conversation-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px}
+#focused-interview-header .conversation-heading strong{font-size:14px}
+#focused-interview-header .interview-header-actions{display:flex;align-items:center;gap:10px}
+#focused-interview-header .iv-options{position:relative;font-size:12px}
+#focused-interview-header .iv-options>summary{cursor:pointer;padding:6px;color:var(--t2)}
+#focused-interview-header .iv-options-menu{position:absolute;top:30px;right:0;width:280px;max-height:min(560px,65dvh);overflow:auto;background:white;border:1px solid var(--line);border-radius:8px;padding:12px;box-shadow:0 8px 28px #18253620;display:flex;flex-direction:column;align-items:stretch;gap:7px;z-index:20}
+#focused-interview-header .iv-options:not([open])>.iv-options-menu{display:none}
+#conversation-panel #conversation-scope .iv-scope-picker{display:flex;align-items:center;gap:10px;font-size:11px;color:var(--t2)}
+#conversation-panel #conversation-scope #ivscope{min-width:0;width:auto;flex:1;border:0;background:#f6f7fa;border-radius:5px;font:inherit;font-size:12px;color:var(--t1);padding:7px;max-width:100%}
+#conversation-intention{margin-top:12px}
+#conversation-edit-intention{display:grid;grid-template-columns:1fr auto;gap:4px;text-align:left;width:100%;background:none;border:0;padding:0;color:var(--t1);cursor:pointer;font:inherit}
+#conversation-edit-intention small{grid-column:1/-1;letter-spacing:.06em;font-size:9px}
+#conversation-edit-intention span{display:block!important;font-size:13px!important;line-height:1.5;overflow-wrap:anywhere}
+#conversation-edit-intention svg{width:14px;color:var(--t2)}
+#conversation-intention-form{display:grid;gap:9px;font-size:12px}#conversation-intention-form textarea{box-sizing:border-box;width:100%;font:inherit;line-height:1.5;resize:vertical;border:1px solid var(--line);border-radius:6px;padding:9px;background:white;color:var(--t1)}
+#conversation-intention-form>div{display:flex;gap:8px}#conversation-intention-form[hidden],#conversation-edit-intention[hidden]{display:none}
+#conversation-selected-context{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:7px;font-size:11px;color:var(--t2)}#conversation-selected-context[hidden]{display:none}
+#conversation-selected-context span{font-size:11px!important;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#conversation-orientation{margin:12px 0 26px}#conversation-orientation h3{font-size:20px;line-height:1.4;max-width:24ch;margin:12px 0}
+#conversation-orientation p{font-size:13px;line-height:1.7;color:var(--t2)}
+#conversation-orientation details{font-size:12px;margin-top:16px}#conversation-orientation summary{cursor:pointer;color:var(--t2);line-height:1.5}
+.conversation-starters>div{display:grid;gap:8px;margin-top:12px}.conversation-starters .bt{height:auto;text-align:left;white-space:normal;line-height:1.5;justify-content:flex-start;padding:10px}
+.conversation-return{border-bottom:1px solid var(--line);padding-bottom:14px}.conversation-return>small{display:block;margin-top:14px}
+#conversation-panel #interview-build-controls{display:flex;flex-direction:column;align-items:stretch;padding:10px 0;border-top:1px solid var(--line);border-bottom:0;gap:10px;font-size:12px}
+#conversation-panel #interview-activities{padding:8px 0;border:0;background:transparent;font-size:12px}
+#conversation-panel #interview-activities>div{display:flex;flex-direction:column;margin-top:8px;gap:3px}
+#conversation-panel #interview-activities p{display:block;font-size:11px}#conversation-panel #interview-activities summary{cursor:pointer;padding:5px}
+body.interview-focus #iv-implementation-requests{display:block;margin-top:20px}
+#conversation-model-gate{font-size:11px;line-height:1.5;color:var(--t2);margin-bottom:10px;display:flex;flex-wrap:wrap;gap:3px 10px}
+#conversation-model-gate>span{flex-basis:100%}
+#conversation-panel #iv .tx{width:100%;min-width:0}#conversation-panel #ivscroll{display:block;overflow-y:auto;flex:1;min-height:0}
+#conversation-panel #discussion-actions{padding:0;margin:0;display:block}#conversation-panel #discussion-actions .bt{width:100%;justify-content:flex-start}
+#conversation-panel #interview-build-receipt{padding:10px 20px}
+#conversation-panel button,#conversation-panel summary,#conversation-panel select{touch-action:manipulation}
+#conversation-panel summary:focus-visible,#conversation-panel select:focus-visible{outline:2px solid #315dcc;outline-offset:3px}
+@media(max-width:750px){
+ body.interview-focus #tl{height:25dvh!important}
+ body.interview-focus #conversation-panel:has(#iv){top:calc(62px + 25dvh)}
+ body.interview-focus #focused-interview-header{padding:12px 16px!important}
+ #focused-interview-header .conversation-heading{margin-bottom:8px}
+ #conversation-intention{margin-top:8px}
+ #conversation-orientation{margin:0 0 18px}#conversation-orientation h3{font-size:18px}
+ body.interview-focus #conversation-panel #iv>.ask{padding:10px 16px}
+ body.work-focus.work-chat #work-space{height:25dvh}
+ body.work-focus.work-chat #conversation-panel.open:has(#iv){top:calc(62px + 25dvh)}
+}
+
+#interview-pause[hidden]{display:none!important}
+
+#conversation-edit-intention span{display:-webkit-box!important;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+
+/* Scope follows explicit canvas discussion, never a second flat graph navigator. */
+#iv .iv-scope-picker[hidden]{display:none!important}
+#conversation-scope{display:flex;align-items:center;justify-content:space-between;gap:12px;font-size:12px;color:var(--t2)}
+#conversation-scope>span{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#conversation-scope>.bt{flex:none}
+#conversation-orientation{display:none!important}
+#conversation-panel #ivlines:empty{min-height:0}
+
+#iv .iv-options[hidden],#conversation-intention[hidden]{display:none!important}
+#chat-controls{display:flex;align-items:center;margin-top:8px;font-size:11px;color:var(--t2)}
+#chat-controls label{display:flex;align-items:center;gap:7px;cursor:pointer}
+#chat-controls input{accent-color:var(--accent,#315dcc)}
+
+/* Delivery state, shared by the conversation handoff sheet and the Langfuse evidence panel. */
+.delivery-state{font-weight:550;margin:14px 0 4px}
+.delivery-refresh{margin:0 0 10px}
+.delivery-how{border-top:1px solid var(--line);padding-top:10px;margin-top:6px}
+.delivery-how code{font-family:ui-monospace,Menlo,monospace;font-size:11px;background:var(--b1,#f4f6f9);border:1px solid var(--line);border-radius:4px;padding:2px 6px;overflow-wrap:anywhere}
+.delivery-how .bt{height:26px;font-size:11px;padding:0 8px;margin-left:6px}
+.delivery-report{border-top:1px solid var(--line);margin-top:12px;padding-top:10px;font-size:12px;line-height:1.5}
+.delivery-report h4{margin:0 0 6px;font-size:12px}
+.delivery-report ul{margin:0 0 8px;padding-left:18px}
+.delivery-report li{margin-bottom:4px}
+
+/* The handoff: one thing to paste, with the connection state above it so nobody sends setup
+   instructions to an agent that is already set up. */
+.handoff-sheet{width:min(720px,94vw)}
+.handoff-state{margin:0 0 4px;font-size:12px;font-weight:600;padding:8px 11px;border-radius:8px}
+.handoff-state[data-connected="yes"]{color:#2f5d43;background:#e7f0ea;border:1px solid #bcd4c5}
+.handoff-state[data-connected="no"]{color:#7c5427;background:#f8f1e4;border:1px solid #e3d3b4}
+.handoff-lead{margin:10px 0 7px;font-size:13px;color:var(--t2)}
+.handoff-prompt{width:100%;box-sizing:border-box;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11.5px;
+  line-height:1.6;border:1px solid var(--line2);border-radius:9px;padding:12px;background:#fbfcfd;color:var(--t1);resize:vertical}
+.handoff-actions{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin-top:10px}
+.handoff-actions #conversation-handoff-status{font-size:11.5px;color:var(--t2)}
+.handoff-commands{margin-top:14px;border-top:1px solid var(--line);padding-top:10px}
+.handoff-commands summary{cursor:pointer;font-size:12px;font-weight:600}
+.handoff-command{display:grid;gap:3px;padding:9px 0;border-bottom:1px solid var(--line)}
+.handoff-command:last-child{border-bottom:0}
+.handoff-command b{font-size:12px}
+.handoff-command code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11.5px;background:#f2f4f8;
+  border:1px solid var(--line);border-radius:6px;padding:5px 8px;cursor:pointer;justify-self:start}
+.handoff-command code:hover{background:#e8ecf4}
+.handoff-command small{font-size:11px;color:var(--t2)}

@@ -1,0 +1,10 @@
+#langfuse-action { flex-shrink: 0; }
+#langfuse-evidence { border-top: 1px solid var(--line, #dfe3e4); margin-top: 16px; padding-top: 14px; font-size: 12px; line-height: 1.5; }
+#langfuse-evidence h3 { margin: 0 0 6px; font-size: 13px; }
+#langfuse-evidence p { margin: 0 0 12px; }
+#langfuse-evidence .langfuse-note { color: var(--muted, #626a70); }
+.langfuse-reference { display: flex; flex-direction: column; gap: 4px; padding: 10px 0; border-top: 1px solid var(--line, #dfe3e4); overflow-wrap: anywhere; }
+.langfuse-reference small { color: var(--muted, #626a70); }
+.langfuse-reference a { color: var(--acc, #245fcc); text-underline-offset: 3px; }
+#langfuse-evidence > .editor-button { margin-top: 8px; }
+#langfuse-delivery { margin-top: 12px; }

@@ -1,0 +1,15 @@
+{
+  "name": "staves-docs",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node scripts/tools.mjs && node scripts/spec.mjs && astro build",
+    "shots": "node scripts/shots.mjs",
+    "tools": "node scripts/tools.mjs"
+  },
+  "devDependencies": {
+    "@astrojs/starlight": "^0.36.0",
+    "astro": "^5.14.1",
+    "playwright": "^1.63.0"
+  }
+}

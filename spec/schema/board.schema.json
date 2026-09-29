@@ -1,0 +1,241 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://staves.io/spec/0.1/board.schema.json",
+  "title": "Staves board",
+  "description": "The Staves format v0.1 (draft): work shared by people, agents and systems.",
+  "type": "object",
+  "required": ["staves", "id", "title", "stance", "tracks", "artifacts", "jobs"],
+  "properties": {
+    "$schema": { "type": "string" },
+    "staves": { "const": "0.1" },
+    "id": { "$ref": "#/$defs/id" },
+    "title": { "type": "string", "minLength": 1 },
+    "goal": { "type": "string" },
+    "stance": { "enum": ["as-is", "to-be"] },
+    "base": { "type": "string" },
+    "tracks": { "type": "array", "items": { "$ref": "#/$defs/track" } },
+    "artifacts": { "type": "array", "items": { "$ref": "#/$defs/artifact" } },
+    "jobs": { "type": "array", "items": { "$ref": "#/$defs/job" } },
+    "handoffs": { "type": "array", "items": { "$ref": "#/$defs/handoff" } },
+    "provenance": { "$ref": "#/$defs/provenance" },
+    "disputes": { "$ref": "#/$defs/disputes" },
+    "refs": { "$ref": "#/$defs/refs" },
+    "extensions": { "$ref": "#/$defs/extensions" }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "id": { "type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$" },
+    "common": {
+      "type": "object",
+      "properties": {
+        "provenance": { "$ref": "#/$defs/provenance" },
+        "disputes": { "$ref": "#/$defs/disputes" },
+        "refs": { "$ref": "#/$defs/refs" },
+        "extensions": { "$ref": "#/$defs/extensions" }
+      }
+    },
+    "track": {
+      "type": "object",
+      "allOf": [{ "$ref": "#/$defs/common" }],
+      "required": ["id", "name", "kind"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "name": { "type": "string", "minLength": 1 },
+        "kind": { "enum": ["person", "agent", "system", "outside"] },
+        "description": { "type": "string" },
+        "provenance": true, "disputes": true, "refs": true, "extensions": true
+      },
+      "additionalProperties": false
+    },
+    "artifact": {
+      "type": "object",
+      "allOf": [{ "$ref": "#/$defs/common" }],
+      "required": ["id", "name", "kind"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "name": { "type": "string", "minLength": 1 },
+        "kind": { "enum": ["document", "data", "decision", "message", "record", "instruction", "measure", "other"] },
+        "external": { "type": "boolean" },
+        "livesIn": { "type": "string" },
+        "note": { "type": "string" },
+        "provenance": true, "disputes": true, "refs": true, "extensions": true
+      },
+      "additionalProperties": false
+    },
+    "job": {
+      "type": "object",
+      "allOf": [{ "$ref": "#/$defs/common" }],
+      "required": ["id", "name", "track", "inputs", "outputs"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "name": { "type": "string", "minLength": 1 },
+        "track": { "$ref": "#/$defs/id" },
+        "parent": { "$ref": "#/$defs/id" },
+        "kind": { "enum": ["work", "queue", "store", "watch", "outside"] },
+        "outcome": { "type": "string" },
+        "beneficiary": { "type": "string" },
+        "doneWhen": { "type": "array", "items": { "type": "string" } },
+        "inputs": { "type": "array", "items": { "$ref": "#/$defs/id" } },
+        "outputs": { "type": "array", "items": { "$ref": "#/$defs/id" } },
+        "trigger": { "enum": ["hand", "ask", "event", "chain", "clock", "watch", "deadline", "always", "other"] },
+        "triggerNote": { "type": "string" },
+        "prerequisites": {
+          "type": "object",
+          "required": ["kind", "inputs"],
+          "properties": {
+            "kind": { "enum": ["all", "any", "conditional", "unknown"] },
+            "inputs": { "type": "array", "items": { "$ref": "#/$defs/id" } },
+            "condition": { "type": "string" }
+          },
+          "additionalProperties": false
+        },
+        "exits": { "type": "array", "items": { "$ref": "#/$defs/exit" } },
+        "gate": { "$ref": "#/$defs/gate" },
+        "loop": {
+          "type": "object",
+          "required": ["to"],
+          "properties": { "to": { "$ref": "#/$defs/id" }, "limit": { "type": "integer", "minimum": 1 }, "then": { "type": "string" } },
+          "additionalProperties": false
+        },
+        "tools": { "type": "array", "items": { "$ref": "#/$defs/tool" } },
+        "status": { "enum": ["draft", "confirmed"] },
+        "change": { "enum": ["added", "changed", "moved", "removed", "unchanged"] },
+        "order": { "type": "number" },
+        "evidence": { "type": "array", "items": { "$ref": "#/$defs/evidence" } },
+        "provenance": true, "disputes": true, "refs": true, "extensions": true
+      },
+      "additionalProperties": false
+    },
+    "exit": {
+      "type": "object",
+      "required": ["condition"],
+      "properties": {
+        "condition": { "type": "string", "minLength": 1 },
+        "target": { "type": "string" },
+        "share": { "type": "number", "minimum": 0, "maximum": 1 }
+      },
+      "additionalProperties": false
+    },
+    "gate": {
+      "type": "object",
+      "required": ["rule"],
+      "properties": {
+        "rule": { "type": "string", "minLength": 1 },
+        "accountable": { "type": "string" },
+        "ruleOwner": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "tool": {
+      "type": "object",
+      "required": ["name", "reach"],
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "reach": { "enum": ["api", "mcp", "screen", "none"] },
+        "personal": { "type": "boolean" },
+        "does": { "type": "string" },
+        "limits": { "type": "string" },
+        "refs": { "$ref": "#/$defs/refs" },
+        "extensions": { "$ref": "#/$defs/extensions" }
+      },
+      "additionalProperties": false
+    },
+    "handoff": {
+      "type": "object",
+      "required": ["id", "from", "to", "kind"],
+      "properties": {
+        "id": { "type": "string" },
+        "from": { "$ref": "#/$defs/id" },
+        "to": { "$ref": "#/$defs/id" },
+        "kind": { "enum": ["artifact", "exit", "loop"] },
+        "artifact": { "$ref": "#/$defs/id" },
+        "condition": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "source": {
+      "type": "object",
+      "required": ["method"],
+      "properties": {
+        "method": { "enum": ["interview", "drawn", "document", "code", "trace", "inferred"] },
+        "by": { "type": "string", "pattern": "^(role|person|agent|tool):.+$" },
+        "at": { "type": "string", "format": "date-time" },
+        "ref": { "type": "string" },
+        "confidence": { "type": "number", "minimum": 0, "maximum": 1 },
+        "confirmed": { "type": "boolean" }
+      },
+      "additionalProperties": false
+    },
+    "provenance": {
+      "type": "object",
+      "propertyNames": { "pattern": "^(\\*|[A-Za-z][A-Za-z0-9]*(\\.[A-Za-z0-9]+)*)$" },
+      "additionalProperties": { "$ref": "#/$defs/source" }
+    },
+    "disputes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["field", "claims"],
+        "properties": {
+          "field": { "type": "string" },
+          "claims": {
+            "type": "array", "minItems": 2,
+            "items": {
+              "type": "object",
+              "required": ["value", "source"],
+              "properties": { "value": true, "source": { "$ref": "#/$defs/source" } },
+              "additionalProperties": false
+            }
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "evidence": {
+      "type": "object",
+      "required": ["system", "traceId", "observedAt", "status"],
+      "properties": {
+        "system": { "type": "string" },
+        "traceId": { "type": "string" },
+        "spanId": { "type": "string" },
+        "graphNodeId": { "type": "string" },
+        "observedAt": { "type": "string", "format": "date-time" },
+        "status": { "enum": ["ok", "error"] },
+        "durationMs": { "type": "number", "minimum": 0 },
+        "mapping": {
+          "type": "object",
+          "required": ["method"],
+          "properties": {
+            "method": { "enum": ["instrumented", "proposed", "reviewed"] },
+            "by": { "type": "string" },
+            "at": { "type": "string", "format": "date-time" }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "refs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["type"],
+        "properties": {
+          "type": { "type": "string" },
+          "uri": { "type": "string" },
+          "id": { "type": "string" },
+          "path": { "type": "string" },
+          "symbol": { "type": "string" },
+          "server": { "type": "string" },
+          "name": { "type": "string" }
+        },
+        "additionalProperties": false
+      }
+    },
+    "extensions": {
+      "type": "object",
+      "propertyNames": { "pattern": "^[a-z0-9-]+(\\.[a-z0-9-]+)+$" },
+      "additionalProperties": { "type": "object" }
+    }
+  }
+}

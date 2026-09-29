@@ -1,0 +1,48 @@
+/* Reachable from anywhere on the board, quiet until wanted. */
+#feedback-open {
+  position: fixed; right: 18px; bottom: 52px; z-index: 40;
+  padding: 9px 15px; border: 1px solid #8597a2; border-radius: 999px;
+  background: #ffffffee; color: #24333c; font: inherit; font-size: 12px; cursor: pointer;
+  box-shadow: 0 2px 10px #0b1a2410;
+}
+#feedback-open:hover { border-color: #4d616d; }
+
+#feedback-panel {
+  position: fixed; right: 18px; bottom: 52px; z-index: 41;
+  width: min(380px, calc(100vw - 36px)); max-height: calc(100vh - 70px); overflow: auto;
+  padding: 20px; border: 1px solid #8597a2; border-radius: 12px;
+  background: #fbfcfc; box-shadow: 0 10px 40px #0b1a2426;
+  display: grid; gap: 9px; align-content: start;
+}
+#feedback-panel h2 { margin: 0 0 4px; font-size: 17px; font-weight: 600; }
+#feedback-panel p { margin: 0; font-size: 13px; line-height: 1.6; color: #5d6b74; }
+#feedback-panel label { font-size: 12px; color: #3d4d57; }
+#feedback-panel select,
+#feedback-panel textarea {
+  width: 100%; padding: 10px; border: 1px solid #8597a2; border-radius: 8px;
+  background: #fff; font: inherit; font-size: 13px;
+}
+#feedback-panel textarea { resize: vertical; min-height: 92px; line-height: 1.6; }
+.feedback-actions { display: flex; gap: 10px; align-items: center; margin-top: 6px; }
+.feedback-status:empty { display: none; }
+.feedback-status { min-height: 18px; font-size: 12px; color: #7a4b3d; }
+.feedback-shot { display: grid; gap: 6px; justify-items: start; }
+.feedback-shot img {
+  width: 100%; border: 1px solid #c3ced5; border-radius: 8px; display: block;
+}
+#feedback-panel .link {
+  border: 0; background: none; padding: 0; font: inherit; font-size: 12px;
+  color: #4d616d; text-decoration: underline; text-underline-offset: 3px; cursor: pointer;
+}
+#feedback-panel .feedback-close { margin-left: auto; }
+#feedback-panel :focus-visible, #feedback-open:focus-visible { outline: 2px solid #2f6f7a; outline-offset: 2px; }
+@media (prefers-reduced-motion: reduce) { #feedback-open, #feedback-panel { transition: none; } }
+
+/* Restart the walkthrough from the footer: onboarding you cannot re-open is a thing people resent. */
+.tour-start {
+  border: 0; background: none; padding: 0; margin-left: 14px;
+  font: inherit; font-size: 11px; color: #4d616d;
+  text-decoration: underline; text-underline-offset: 3px; cursor: pointer;
+}
+.tour-start:hover { color: #16242c; }
+.tour-start:focus-visible { outline: 2px solid #2f6f7a; outline-offset: 3px; }

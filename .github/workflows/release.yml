@@ -1,0 +1,29 @@
+name: release
+on:
+  push:
+    tags: ["v*"]
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions: { contents: write, id-token: write }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22, cache: npm, registry-url: "https://registry.npmjs.org" }
+      - name: verify the tag matches the package
+        run: node -e 'const p=require("./package.json"); if(process.env.GITHUB_REF_NAME!=="v"+p.version) process.exit(1)'
+      - run: npm ci
+      - run: npm run build
+      - run: npm test
+      - run: npm run check:boundary -- --pack
+      - name: build staves.html (the whole app in one file)
+        run: |
+          npx esbuild dist/standalone.js --bundle --format=iife --platform=browser --minify --outfile=/tmp/standalone.js
+          node scripts/compose.cjs
+      - uses: softprops/action-gh-release@v2
+        with:
+          files: staves.html
+          generate_release_notes: true
+      - name: publish with source provenance
+        run: npm publish --access public --provenance
+        env: { NODE_AUTH_TOKEN: "${{ secrets.NPM_TOKEN }}" }

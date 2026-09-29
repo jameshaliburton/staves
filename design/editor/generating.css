@@ -1,0 +1,63 @@
+/* Work announcing itself: ghosted until it lands, then settling into the board's own colours. */
+#gen-board {
+  position: absolute; left: 18px; bottom: 18px; z-index: 22;
+  width: min(300px, calc(100% - 36px));
+  padding: 12px 14px; border: 1px solid #ffffff1f; border-radius: 10px;
+  background: #0d151bd9; backdrop-filter: blur(6px); color: #e6eef2;
+  pointer-events: none;
+}
+#gen-strip {
+  margin: 10px 0 4px; padding: 11px 13px;
+  border: 1px solid #00000016; border-radius: 10px; background: #ffffff8c;
+}
+
+.gen-head { display: flex; align-items: center; gap: 9px; margin: 0 0 9px; font-size: 12px; }
+#gen-strip .gen-head { color: #3d4d57; }
+
+.gen-pulse {
+  width: 7px; height: 7px; border-radius: 50%; background: #b8dcd9; flex: none;
+  animation: gen-breathe 1.5s ease-in-out infinite;
+}
+.done .gen-pulse { animation: none; background: #7fc9a5; }
+.failed .gen-pulse { animation: none; background: #d99a86; }
+@keyframes gen-breathe { 0%, 100% { opacity: .35; transform: scale(.8); } 50% { opacity: 1; transform: scale(1.15); } }
+
+.gen-chips { display: grid; gap: 5px; max-height: 190px; overflow: hidden; }
+
+/* Ghosted: present, clearly not yet real. */
+.gen-chip {
+  display: flex; align-items: baseline; gap: 8px;
+  padding: 5px 9px; border-radius: 7px; font-size: 12px; line-height: 1.4;
+  border: 1px dashed color-mix(in srgb, var(--gen-tint) 55%, transparent);
+  background: color-mix(in srgb, var(--gen-tint) 9%, transparent);
+  opacity: .62; transition: opacity .35s ease, border-color .35s ease, background .35s ease;
+}
+.gen-chip i { width: 6px; height: 6px; border-radius: 50%; background: var(--gen-tint); flex: none; align-self: center; opacity: .7; }
+.gen-chip b { font-weight: 600; font-size: 10px; letter-spacing: .06em; text-transform: uppercase; color: var(--gen-tint); flex: none; }
+.gen-chip span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+/* Settled: it exists now. */
+.gen-chip.settled {
+  opacity: 1; border-style: solid;
+  border-color: color-mix(in srgb, var(--gen-tint) 42%, transparent);
+  background: color-mix(in srgb, var(--gen-tint) 15%, transparent);
+}
+.gen-chip.settled i { opacity: 1; }
+
+@media (prefers-reduced-motion: reduce) {
+  .gen-pulse { animation: none; }
+  .gen-chip { transition: none; }
+}
+@media (max-width: 700px) {
+  #gen-board { left: 10px; right: 10px; bottom: 10px; width: auto; }
+  .gen-chips { max-height: 120px; }
+}
+
+/* The kind tints are chosen to glow on the dark board; on the conversation's light ground they
+   dissolve. Keep the tint as the dot and darken the label so a ghosted row is still readable. */
+#gen-strip .gen-chip { opacity: .78; border-color: color-mix(in srgb, var(--gen-tint) 42%, #b9c4cb); }
+#gen-strip .gen-chip b { color: color-mix(in srgb, var(--gen-tint) 34%, #3a4a54); }
+#gen-strip .gen-chip span { color: #47575f; }
+#gen-strip .gen-chip.settled { opacity: 1; }
+#gen-strip .gen-chip.settled b { color: color-mix(in srgb, var(--gen-tint) 50%, #22333d); }
+#gen-strip .gen-chip.settled span { color: #1b2830; }

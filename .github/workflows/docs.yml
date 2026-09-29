@@ -1,0 +1,43 @@
+name: docs
+on:
+  push:
+    branches: [main]
+    paths: ['design/**', 'src/**', 'docs-site/**', '.github/workflows/docs.yml']
+  pull_request:
+    paths: ['design/**', 'src/**', 'docs-site/**']
+concurrency:
+  group: docs-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  screenshots:
+    # Checks only. It never regenerates and commits on your behalf — a screenshot is a claim about
+    # what the product looks like, and a person should look at it before it is published.
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22, cache: npm }
+      - run: npm ci
+      - run: npm run build
+      - run: npm --prefix docs-site ci --no-audit --no-fund
+      # The browser download is cached by the lockfile; the system libraries it needs are not, so a cache
+      # hit still installs those.
+      - id: browser
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ hashFiles('docs-site/package-lock.json') }}
+      - if: steps.browser.outputs.cache-hit != 'true'
+        run: npx --prefix docs-site playwright install --with-deps chromium
+      - if: steps.browser.outputs.cache-hit == 'true'
+        run: npx --prefix docs-site playwright install-deps chromium
+      - name: the screenshots must still match the interface
+        run: npm --prefix docs-site run shots -- --check
+      - name: keep what the interface looks like now, so it can be reviewed and committed
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: screenshots-as-built
+          path: docs-site/.shots-check/
+          include-hidden-files: true

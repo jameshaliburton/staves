@@ -1,0 +1,38 @@
+---
+title: Staves
+description: Describe how work happens — who does what, what passes between them, and where it stalls.
+template: splash
+hero:
+  tagline: A board shows one piece of work as the people in it experience it. Your coding agent reads your code and draws it.
+  actions:
+    - text: Your first session
+      link: /docs/first-session/
+      icon: right-arrow
+    - text: Open Staves
+      link: https://staves.io/workspace
+      variant: minimal
+      icon: external
+---
+
+import { Card, CardGrid } from '@astrojs/starlight/components';
+
+<CardGrid stagger>
+  <Card title="Start with one workflow" icon="approve-check">
+    A repository holds several. Name the one you mean and describe only that, on its own board.
+    [Start here](/docs/first-board/)
+  </Card>
+  <Card title="Copy, paste, and your agent connects" icon="rocket">
+    **New board → Use my coding agent** gives you one thing to paste into your agent's chat. It
+    connects itself; nothing is cloned and no repository is uploaded. Node.js is all you install.
+    [Your first session](/docs/first-session/)
+  </Card>
+  <Card title="Your agent is already a model" icon="setting">
+    Connecting an agent, drawing a board and reviewing it need no AI key. A key of your own is for
+    talking to Staves *in the browser*: the interview and the reviews it runs there.
+    [What the key is for](/docs/account/)
+  </Card>
+  <Card title="When it goes wrong" icon="warning">
+    `npx @staves/cli doctor` — one screen of what is running, what is registered and what is wrong.
+    [Troubleshooting](/docs/troubleshooting/)
+  </Card>
+</CardGrid>

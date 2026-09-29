@@ -1,0 +1,27 @@
+/* The docs take the product's accent and neutrals so the two do not read as different companies. */
+:root {
+  --sl-color-accent-low: #d8e2ff;
+  --sl-color-accent: #2455e6;
+  --sl-color-accent-high: #16357f;
+  --sl-color-white: #fff;
+  --sl-color-gray-1: #252a34;
+  --sl-color-gray-2: #5d6676;
+  --sl-color-gray-3: #89919e;
+  --sl-color-gray-5: #e1e5ec;
+  --sl-color-gray-6: #f0f2f6;
+  --sl-color-gray-7: #fafbfc;
+  --sl-color-black: #fff;
+}
+:root[data-theme='dark'] {
+  --sl-color-accent-low: #16357f;
+  --sl-color-accent: #7d9bff;
+  --sl-color-accent-high: #d8e2ff;
+  --sl-color-white: #e8ebf0;
+  --sl-color-gray-1: #e8ebf0;
+  --sl-color-gray-2: #a3abb9;
+  --sl-color-gray-3: #7c8494;
+  --sl-color-gray-5: #2b323d;
+  --sl-color-gray-6: #222834;
+  --sl-color-black: #101319;
+}
+.site-title { font-weight: 600; letter-spacing: -.02em; }

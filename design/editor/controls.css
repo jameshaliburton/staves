@@ -1,0 +1,55 @@
+/* Three jobs, three appearances — so you can tell by looking what a pill will do.
+
+   fact   a value being reported. Not pressable, so it does not offer to be pressed.
+   acts   something happens when you press it. Hover, a focus ring, a pointer.
+   gap    something missing, inviting you to fill it. Dashed, already .chip.q.           */
+
+.chip.chip-fact {
+  cursor: default;
+  background: transparent;
+  border-color: var(--line, #e3e6ea);
+  color: var(--t2, #55606a);
+}
+.chip.chip-fact:hover { border-color: var(--line, #e3e6ea); color: var(--t2, #55606a); }
+
+.chip.chip-acts { cursor: pointer; }
+.chip.chip-acts:hover { border-color: var(--line2, #b9c4cb); }
+
+/* Focus must be visible on a dark board and a light panel alike, and must not be clipped by the
+   pill's own overflow — hence an outline rather than a shadow. */
+.chip:focus-visible {
+  outline: 2px solid var(--acc, #2f6f7a);
+  outline-offset: 2px;
+}
+
+/* A chip that is one of a set of choices reads as chosen, rather than merely tinted. */
+.chip.on {
+  border-color: var(--acc, #2f6f7a);
+  box-shadow: inset 0 0 0 1px var(--acc, #2f6f7a);
+  color: var(--t1, #16242c);
+}
+
+@media (prefers-reduced-motion: reduce) { .chip { transition: none; } }
+
+/* A set of options that are one choice. The shared track is what says "pick one of these" — a row of
+   separate pills says nothing of the kind, which is why these used to read as four unrelated buttons. */
+.segset {
+  display: inline-flex; align-items: stretch; gap: 2px; flex-wrap: wrap;
+  background: var(--b3, #f0f2f6); border-radius: 8px; padding: 2px;
+  max-width: 100%;
+}
+.segset .segopt {
+  display: inline-flex; align-items: center; gap: 6px;
+  border: 0; background: none; cursor: pointer; border-radius: 6px;
+  padding: 6px 10px; min-height: 26px;
+  font: 500 12.5px/1.35 inherit; color: var(--t2, #5d6676);
+  white-space: nowrap;
+}
+.segset .segopt:hover { color: var(--t1, #252a34); }
+.segset .segopt[aria-checked="true"] {
+  background: var(--b1, #fff); color: var(--t1, #252a34);
+  box-shadow: 0 1px 2px #0000001f;
+}
+.segset .segopt:focus-visible { outline: 2px solid var(--acc, #2455e6); outline-offset: 1px; }
+.segset .segopt i { flex: none; opacity: .75; }
+.segset .segopt[aria-checked="true"] i { opacity: 1; color: var(--acc, #2455e6); }

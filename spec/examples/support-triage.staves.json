@@ -1,0 +1,55 @@
+{
+  "$schema": "https://staves.io/spec/0.1/board.schema.json",
+  "staves": "0.1",
+  "id": "support-triage",
+  "title": "Support triage",
+  "goal": "Every customer question gets a correct answer, or a person, the same day",
+  "stance": "as-is",
+  "provenance": { "*": { "method": "code", "by": "agent:claude-code", "at": "2026-09-20T10:00:00Z", "ref": "git:4be1c2e" } },
+  "tracks": [
+    { "id": "customer", "name": "Customer", "kind": "outside" },
+    { "id": "agent-triage", "name": "Triage agent", "kind": "agent", "description": "Reads each ticket, answers what it can, routes the rest",
+      "refs": [{ "type": "code", "path": "src/agents/triage.ts" }] },
+    { "id": "helpdesk", "name": "Helpdesk", "kind": "system", "refs": [{ "type": "uri", "uri": "https://www.zendesk.com" }] },
+    { "id": "support-lead", "name": "Support lead", "kind": "person",
+      "provenance": { "*": { "method": "interview", "by": "role:support-lead", "at": "2026-09-21T14:00:00Z" } } }
+  ],
+  "artifacts": [
+    { "id": "ticket", "name": "Ticket", "kind": "message", "external": true, "livesIn": "Zendesk", "note": "Subject, body, customer plan" },
+    { "id": "draft-answer", "name": "Draft answer", "kind": "document", "note": "Answer plus the help-centre article it cites" },
+    { "id": "refund-request", "name": "Refund request", "kind": "decision" },
+    { "id": "reply", "name": "Reply", "kind": "message" }
+  ],
+  "jobs": [
+    { "id": "ask", "name": "Ask a question", "track": "customer", "kind": "outside", "inputs": [], "outputs": ["ticket"], "status": "draft" },
+    { "id": "answer", "name": "Answer the question", "track": "agent-triage",
+      "outcome": "The customer has a correct answer", "beneficiary": "customer",
+      "inputs": ["ticket"], "outputs": ["draft-answer", "refund-request"], "trigger": "event", "status": "draft",
+      "exits": [
+        { "condition": "the customer wants money back", "target": "refund", "share": 0.1 },
+        { "condition": "no help-centre article matches", "target": "escalate", "share": 0.25 }
+      ],
+      "tools": [{ "name": "Help-centre search", "reach": "mcp", "does": "returns the top five articles, titles and first paragraph", "limits": "no attachments, no internal notes",
+        "refs": [{ "type": "mcp-tool", "server": "zendesk", "name": "search_articles" }] }],
+      "refs": [{ "type": "code", "path": "src/agents/triage.ts", "symbol": "answer" }, { "type": "instructions", "path": "prompts/triage.md" }],
+      "evidence": [{ "system": "otel", "traceId": "4bf92f3577b34da6a3ce929d0e0e4736", "spanId": "00f067aa0ba902b7", "observedAt": "2026-09-19T08:14:03Z", "status": "ok", "durationMs": 5400,
+        "mapping": { "method": "reviewed", "by": "role:engineer" } }],
+      "extensions": { "io.staves.measures": { "perWeek": 1200 } } },
+    { "id": "refund", "name": "Issue the refund", "track": "agent-triage",
+      "outcome": "The customer has their money back", "beneficiary": "customer",
+      "inputs": ["refund-request"], "outputs": ["reply"], "status": "draft",
+      "refs": [{ "type": "code", "path": "src/agents/refund.ts", "symbol": "issue" }],
+      "disputes": [{ "field": "gate", "claims": [
+        { "value": null, "source": { "method": "code", "by": "agent:claude-code", "ref": "git:4be1c2e:src/agents/refund.ts#issue" } },
+        { "value": { "rule": "every refund is checked by a person", "accountable": "support-lead" },
+          "source": { "method": "interview", "by": "role:support-lead", "at": "2026-09-21T14:10:00Z" } }
+      ] }] },
+    { "id": "escalate", "name": "Take over the ticket", "track": "support-lead",
+      "outcome": "A person owns the answer", "beneficiary": "customer",
+      "inputs": ["draft-answer"], "outputs": ["reply"], "trigger": "hand", "status": "confirmed",
+      "gate": { "rule": "nothing leaves without a cited source", "accountable": "support-lead" },
+      "provenance": { "*": { "method": "interview", "by": "role:support-lead", "at": "2026-09-21T14:05:00Z", "confirmed": true } },
+      "extensions": { "io.staves.measures": { "minutes": 12 } } },
+    { "id": "send", "name": "Send the reply", "track": "helpdesk", "inputs": ["reply"], "outputs": [], "trigger": "chain", "status": "draft" }
+  ]
+}

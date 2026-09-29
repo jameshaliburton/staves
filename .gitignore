@@ -1,0 +1,31 @@
+node_modules
+dist
+*.tgz
+.staves/.daemon.json
+staves.html
+workspace-v4.html
+.staves/
+
+.env*
+!.env.example
+.vercel
+
+supabase/.temp/
+docs-site/node_modules/
+public/docs/
+public/spec/
+.superpowers/
+docs-site/.shots-check/
+
+# Written by `staves connect` and `staves init` with this machine's connection id. CLAUDE.md, AGENTS.md
+# and GEMINI.md are tracked: their managed block names no connection (it lives in .staves/config.json).
+.mcp.json
+.claude/
+.codex/
+.cursor/
+.gemini/
+.agents/
+
+# Local assistant output and compiler caches
+Claude outputs/
+*.tsbuildinfo

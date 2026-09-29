@@ -1,0 +1,452 @@
+#editor-tools[hidden],.editor-viewbar[hidden]{display:none!important}
+#top{gap:12px}#top .logo{display:none}#board-menu{border:0;padding-left:0;color:var(--t2)}#top .name{max-width:min(650px,65vw);font-size:13px}
+#canvas-mode{font:inherit;font-weight:550;min-width:108px;border:0;background:transparent;padding:7px 4px;margin-right:10px;color:var(--t1)}
+#tl>.ph{height:48px;gap:6px;flex-shrink:0;flex-wrap:wrap}.icon-control{padding:0;width:28px;justify-content:center;border:0}.icon-control>span{display:none}
+#tl>.ph>.editor-button{height:29px;font-size:11px}#tl>.ph>.editor-button.primary{background:#fff;color:var(--t1);border-color:var(--line)}
+#zoom-readout{min-width:55px;font-size:10px;color:var(--t2)}.editor-toolbar{margin-left:8px;padding-left:8px;border-left:1px solid var(--line)}.editor-toolbar .editor-button{font-size:10px;height:27px;padding:0 7px}
+#conversation-panel{width:min(430px,100vw);box-sizing:border-box;box-shadow:none;padding:16px;background:#fff}
+#staves-tabs{display:flex;gap:16px;border-bottom:1px solid var(--line);margin-bottom:16px;padding-bottom:8px;position:sticky;top:-16px;background:white;z-index:2;padding-top:8px}
+/* In the conversation it is a small segmented switch in the header, not a page-wide tab bar. */
+body #focused-interview-header>#staves-tabs{order:-1;display:inline-flex;gap:2px;width:fit-content;align-self:flex-start;margin:0 0 2px;padding:2px;border:1px solid var(--line);border-radius:7px;background:#f4f6fa;position:static}
+body #focused-interview-header>#staves-tabs button{height:22px;padding:0 9px;font-size:11px;border-radius:5px;color:var(--t2);gap:5px}
+body #focused-interview-header>#staves-tabs button svg{width:12px;height:12px}
+body #focused-interview-header>#staves-tabs button[aria-pressed="true"]{border:0;background:#fff;color:var(--t1);box-shadow:0 1px 2px #1c304014}
+#staves-tabs button{border:0;background:transparent;padding:0 4px;height:32px;color:var(--t2);border-radius:0}#staves-tabs button[aria-pressed="true"]{border-bottom:2px solid var(--acc);color:var(--t1)}
+#conversation-panel .review-visual{width:100%!important;border:0;box-shadow:none;max-height:none;overflow:visible}#conversation-panel .review-visual>.sh{padding:0;font-size:15px;margin-bottom:12px}#conversation-panel .review-visual>.sb{padding:0;overflow:visible}#conversation-panel .review-visual>.sf{padding:12px 0}
+#conversation-panel .review-counts{display:flex;gap:5px;margin-bottom:12px}#conversation-panel .review-counts button{padding:7px;gap:4px;flex:1;border-radius:4px}#conversation-panel .review-counts b{font-size:14px}#conversation-panel .review-counts span{font-size:10px}
+#conversation-panel .conversation-start{padding:16px 0}#conversation-panel .conversation-context{padding-bottom:12px}#conversation-panel h3{font-size:16px}#conversation-panel .conversation-prompts{margin-top:10px}#conversation-panel .conversation-prompt{background:white;padding:8px 0;border:0;border-radius:0;color:var(--t2)}
+#conversation-panel .conversation-assistant{padding:16px 0}#conversation-panel .conversation-start>small{font-size:10px}#conversation-panel .conversation-context>svg{width:20px;height:20px;padding:4px;background:transparent}
+@media(max-width:750px){#top{padding:0 12px;gap:6px}#top .name{max-width:45vw}#tl>.ph{height:auto;min-height:48px;padding:6px 10px}#canvas-mode{margin-right:0}#tl>.ph>.grow{min-width:0}.editor-toolbar{width:100%;order:2;border:0;margin:0;padding:3px 0}#tl>.ph>.labelled-control span{display:none}}
+
+@media(min-width:751px){body:has(#conversation-panel.open) #ws{grid-template-columns:minmax(0,1fr) 430px!important}body:has(#conversation-panel.open) #tl{grid-column:1!important}body:has(#conversation-panel.open) #stage,body:has(#conversation-panel.open) #ol{display:none!important}}
+#implementation-state{display:flex;align-items:center;gap:10px;margin-top:12px;border-top:1px solid var(--line);padding-top:10px}#implementation-state>small{font-size:10px;color:var(--t2)}#implementation-state button{height:26px;font-size:11px;padding:0 7px}
+/* Shared forms preserve values and use native choices. */
+#veil fieldset.fl{border:0;padding:0;margin:0 0 16px;min-width:0}#veil legend{font-size:13px;font-weight:600;margin-bottom:8px}#veil .opt:has(input:checked){background:#edf1ff;border-color:#3258c9;color:#233f91}#veil .opt input[type=radio]{width:16px;height:16px;margin:0 6px 0 0}#sheet-error{color:#99364a;padding:0 22px}#sheet-error:empty{display:none}
+#conversation-panel:has(#iv){width:min(760px,95vw);padding:0;display:flex;flex-direction:column}#conversation-panel #iv{position:static;inset:auto;display:flex;flex:1;min-height:0;flex-direction:column;width:100%;height:auto;background:var(--b0);z-index:auto}#conversation-panel #iv .bar{flex-wrap:wrap;padding:12px;gap:8px}#conversation-panel #iv .body{display:flex;flex-direction:column;overflow:auto;min-height:0}#conversation-panel #iv .tx,#conversation-panel #iv .form{width:auto;padding:16px}#conversation-panel #iv .form{border-top:1px solid var(--line)}#conversation-panel #iv .bar button{font-size:12px}#conversation-panel #iv .bar h3{font-size:15px}#ivsend:disabled{opacity:.6}#staves-tabs{flex-shrink:0}#conversation-panel #iv .ask{position:sticky;bottom:0;background:var(--b0);padding:12px 0}
+#conversation-panel:has(#iv):not(.open){display:none}#conversation-panel .conversation-start{display:none}
+.inspector-field-label{display:block;font-size:12px;font-weight:600;color:#596477;margin:12px 0 4px}
+#iv .iv-options{position:relative;font-size:12px}#iv .iv-options summary{cursor:pointer;border:1px solid #bdc6d3;border-radius:6px;padding:8px 10px;white-space:nowrap}#iv .iv-options-menu{position:absolute;right:0;top:calc(100% + 6px);z-index:5;display:flex;flex-direction:column;gap:6px;width:250px;padding:10px;background:#fff;border:1px solid #c3cbd6;border-radius:8px;box-shadow:0 8px 24px #18253620}#iv .iv-options-menu button{justify-content:flex-start;text-align:left;height:auto;min-height:34px;white-space:normal}#iv .iv-options:not([open]) .iv-options-menu{display:none}#ivacceptall:disabled{opacity:.5;cursor:default}#iv .iv-options summary:focus-visible{outline:2px solid #3258c9;outline-offset:2px}
+/* Retired chat remains in the DOM for legacy render hooks only. */
+#ask{display:none!important;visibility:hidden!important;pointer-events:none!important}
+
+/* Keep scope and turn-taking controls stationary; one region owns interview scrolling. */
+#conversation-panel:has(#iv){overflow:hidden;bottom:var(--status-bar)}
+#conversation-panel #iv .bar{flex:none;align-items:center;position:relative;background:white;z-index:3}
+#conversation-panel #iv .bar>h3{display:none}
+#conversation-panel #iv .bar>span:not(.grow){flex:1 1 100%;font-size:12px!important;line-height:1.5;overflow-wrap:anywhere}
+#iv-scope-title{font-size:16px;display:inline;font-weight:600;color:var(--t1)}
+#iv .iv-scope-picker{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--t2);min-width:0;flex:1}
+#ivscope{font:inherit;border:1px solid var(--line2);border-radius:5px;padding:6px;max-width:270px;min-width:0;background:white;color:var(--t1)}
+#conversation-panel #iv #ivscroll{flex:1;overflow-y:auto;overflow-x:hidden;display:block;min-height:0;overscroll-behavior:contain;scroll-padding:16px}
+#conversation-panel #iv .tx,#conversation-panel #iv .form{overflow:visible;flex:none;border-right:0}
+#conversation-panel #iv>.ask{position:static;flex:none;border-top:1px solid var(--line);padding:12px 16px;background:white;z-index:2}
+#iv .ask .box{height:auto;min-height:48px;flex-wrap:wrap;padding:8px}
+#iv .ask input{min-width:80px}
+#iv-latest[hidden]{display:none}
+#iv #iv-latest{font-size:11px}
+#iv .line{grid-template-columns:52px minmax(0,1fr);gap:10px}
+#iv .rec2.accepted{opacity:1;background:#f5f8f6!important;border-color:#aec4b7!important}
+#iv-implementation-requests{border:1px solid var(--line);border-radius:8px;margin:16px 0;padding:12px;font-size:12px}
+#iv-implementation-requests summary{cursor:pointer;font-weight:600}
+#iv-implementation-requests article{padding-top:12px;border-top:1px solid var(--line);margin-top:12px}
+#iv-implementation-requests blockquote{margin:8px 0;border-left:2px solid var(--acc);padding:8px 12px;white-space:pre-wrap}
+#iv-implementation-requests p{white-space:pre-wrap}
+@media(max-width:600px){#conversation-panel:has(#iv){width:100vw}#ivscope{max-width:175px}#conversation-panel #iv .bar{gap:6px}#iv .iv-options summary{font-size:11px;padding:6px}#conversation-panel #iv .tx,#conversation-panel #iv .form{padding:12px}}
+@media(min-width:751px){body:has(#conversation-panel.open #iv) #ws{grid-template-columns:minmax(0,1fr) min(640px,50vw)!important}#conversation-panel:has(#iv){width:min(640px,50vw)}}
+#conversation-panel #iv .tx>h4{display:none}
+#iv-progress{flex:1 1 100%;display:flex;align-items:center;gap:10px;border-top:1px solid var(--line);padding-top:8px;font-size:11px;color:var(--t2)}#iv-progress button{height:26px!important;font-size:11px!important}#iv-progress>span{margin-right:auto}
+#iv-board-work{display:grid;gap:6px}#iv-board-work button{height:auto;min-height:36px;white-space:normal;text-align:left;justify-content:flex-start}
+
+/* Continuous workspace: a single compact header, floating canvas tools, persistent identity. */
+body #top{height:42px;min-height:42px;padding:0 14px;gap:8px;flex-wrap:nowrap;background:#34414a;border-bottom:1px solid #4c5860}
+body #top #shell-home{height:32px;padding:0 8px 0 0;gap:9px;border:0;background:transparent;flex:none}
+body #top #shell-home .shell-wordmark{font-size:20px;letter-spacing:-.8px}
+body #top #shell-home .beta-label{display:none}
+body #top #shell-home .shell-boards-label{display:inline;border-left:1px solid #657079;padding-left:12px;margin-left:8px;font-size:11px;color:#d5dee3}
+body #top #shell-home svg{width:17px;height:21px}
+body #top .name{font-size:12px!important;max-width:min(420px,32vw);min-width:50px;margin:0;padding:4px 0;cursor:pointer;color:#f0f4f6}
+body #top #board-menu{width:24px;min-width:24px;height:27px;padding:0;justify-content:center;background:transparent;color:#d6e0e6;border:0;margin-left:-6px}
+body #top #board-menu>span{display:none}
+body #top #board-menu svg{width:12px;height:12px}
+body #workspace-design-identity{font-size:10px;white-space:nowrap;background:#445660;border:1px solid #667983;border-radius:5px;padding:4px 7px;color:#e0eaf0;line-height:1.2}
+body #workspace-design-identity[data-kind="alternative"]{background:#514d69;border-color:#817598;color:#eee8fb}
+body #top .editor-button{height:28px;font-size:11px}
+body #top .grow{min-width:4px}
+body #ws{grid-template-rows:42px minmax(0,1fr)!important}
+body #tl{position:relative;min-height:0;overflow:hidden}
+body #tl>.ph{height:0!important;min-height:0!important;padding:0!important;border:0;background:transparent;display:contents}
+body #tl>.ph>.grow,body #tl>.ph>svg,body #canvas-mode,body #tl>.ph>.labelled-control{display:none!important}
+body #canvas-edit-tools,body #canvas-view-tools{position:absolute;z-index:12;display:flex;align-items:center;gap:4px;padding:4px;background:#fffffff5;border:1px solid #cbd4dc;border-radius:9px;box-shadow:0 2px 9px #253e5314;max-width:calc(100% - 24px)}
+body #canvas-edit-tools{top:10px;left:12px}
+body #canvas-view-tools{bottom:12px;left:12px;gap:6px}
+/* Canvas notices sit above the view tools, one at a time. */
+/* Anything that floats at the bottom of the canvas sits in one band above the view tools, and anything
+   pinned to the bottom of the window clears the status bar. Both were guessed per element before — the
+   view tools said 12, the legend 14, the generating notice 18, the activity pill 24 — which is how a new
+   notice ended up on top of the toolbar, and three fixed panels ended up over the status bar. */
+/* Nothing you are meant to hit is smaller than 24px — the accessible minimum — however small it draws.
+   The row buttons drew at 22-23px and the task row at 22px. */
+body .track-edit,body .track-add,body #board-menu{min-width:24px;min-height:24px}
+body .canvas-tasks>.editor-button{min-height:26px;padding:0 8px}
+:root{--status-bar:29px}
+body #tl{--canvas-gutter:12px;--canvas-band:66px;isolation:isolate}
+body #tl>#gen-board,body #tl>#canvas-activity{left:var(--canvas-gutter);bottom:var(--canvas-band)}
+body #tl>#as-run-legend{bottom:var(--canvas-band)}
+body #tl:has(>#gen-board) #canvas-activity{display:none}
+/* The panels fixed to the window keep out of the status bar's row. */
+body #as-run-panel,body #rehearsal-panel{bottom:calc(var(--status-bar) + 8px)}
+body #toast{bottom:calc(var(--status-bar) + 12px)}
+body #conversation-panel{bottom:var(--status-bar)}
+body #canvas-edit-tools .editor-button,body #canvas-view-tools .editor-button{height:27px;font-size:11px;padding:0 8px;white-space:nowrap;background:transparent;border:0;color:#435a6b}
+body #canvas-edit-tools .icon-control{width:26px;padding:0;justify-content:center}
+body #canvas-edit-tools .editor-button:first-child{color:#284d99;background:#eaf0fc;border:1px solid #d3ddf3}
+body #canvas-view-tools .editor-modes{padding:2px;gap:1px;background:#eaf0f5;border-radius:6px}
+body #canvas-view-tools .editor-modes button.active{background:white;color:#223c51;box-shadow:0 1px 3px #213c5220}
+body #canvas-view-tools .editor-modes button svg{display:none}
+body #canvas-view-tools .seg{display:flex;align-items:center;gap:2px;border-left:1px solid #d8e0e6;padding-left:5px}
+body #canvas-view-tools .seg .ib{width:25px;height:25px}
+body #canvas-view-tools #zoom-readout{min-width:31px;font-size:10px;color:#657b8c}
+body #canvas-view-tools>.labelled-control{width:27px!important;padding:0!important;justify-content:center}
+body #canvas-view-tools>.labelled-control>span{display:none}
+body #editor-selection{position:absolute;top:10px;right:12px;z-index:12;margin:0;padding:4px;gap:4px;max-width:calc(100% - 235px);background:#fff;border:1px solid #ccd6df;border-radius:8px;box-shadow:0 2px 9px #253e5314;overflow-x:auto}
+body #editor-selection:empty{display:none}
+body #editor-selection .editor-button{font-size:10px;height:27px;white-space:nowrap}
+/* Reserve toolbar breathing room in the world, not in the scrollport. Wires,
+   region boxes, lane offsets and minimap now share #tracks as their origin. */
+body #tl #tls{padding:0;scroll-padding:52px 12px 56px 212px;box-sizing:border-box;background:#f8fafb}
+body #tl #tracks{padding-top:52px;padding-bottom:76px}
+body #tl #board-brief{position:absolute;left:12px;top:51px;z-index:18;width:min(580px,calc(100% - 24px));max-height:calc(100% - 110px);margin:0;overflow:auto;background:#fff;border:1px solid #bdcbd7;border-radius:10px;box-shadow:0 12px 34px #23394e26}
+body #tl #board-brief:not([open]){display:none}
+body #board-brief .brief-summary{display:none}
+body #board-brief .brief-expand{font-size:0}
+body #board-brief .brief-expand::after{content:'Close';font-size:11px}
+body #board-brief summary{padding:13px 16px;background:#edf2f7}
+body #board-brief .brief-form{padding:14px 16px}
+body #board-brief .brief-fields{display:grid;grid-template-columns:1fr;gap:12px}
+body #board-brief label{font-size:11px}
+body #board-brief textarea{font-size:12px;line-height:1.5;min-height:58px}
+body #tl>.ph>#langfuse-project,body #tl>.ph>[aria-label="Langfuse project"]{display:none}
+body #shell-status #design-history-button{order:-1;margin-right:8px;padding:2px 9px;height:24px;background:#e3ebf3;border:1px solid #c2cfdd;border-radius:5px;color:#3b566d;font-size:11px;cursor:pointer}
+body #shell-status #design-history-button:hover{background:#d9e4f1}
+body #top button:focus-visible,body #top .name:focus-visible,body #canvas-edit-tools button:focus-visible,body #canvas-view-tools button:focus-visible{outline:2px solid #7898ff;outline-offset:2px}
+@media(max-width:1050px){body #top .name{max-width:24vw}body #workspace-design-identity{max-width:115px;overflow:hidden;text-overflow:ellipsis}body #top #shell-home .shell-wordmark{display:none}body #canvas-view-tools{gap:2px}body #canvas-view-tools .editor-button{padding:0 6px}}
+body #tl>.ph>#langfuse-action,body #tl>.ph>#langfuse-account-offer,body #canvas-view-tools>#show-canvas-tasks{display:none}
+body #canvas-view-tools{overflow-x:auto;scrollbar-width:thin;white-space:nowrap}
+body #canvas-view-tools>*{flex-shrink:0}
+
+body #shell-status #design-history-button{min-height:24px}
+body #ws.full{grid-template-rows:0 minmax(0,1fr)!important}
+
+#conversation-resize{display:none}
+@media(min-width:751px){
+  body:has(#conversation-panel.open) #ws:not(.full),body:has(#conversation-panel.open #iv) #ws:not(.full){grid-template-columns:minmax(0,1fr) var(--staves-conversation-width,460px)!important}
+  body #conversation-panel.open,body #conversation-panel.open:has(#iv){width:var(--staves-conversation-width,460px)!important;max-width:none}
+  body:has(#conversation-panel.open) #conversation-resize{display:block;position:fixed;right:calc(var(--staves-conversation-width,460px) - 4px);top:42px;bottom:29px;width:8px;cursor:col-resize;z-index:85;touch-action:none}
+  #conversation-resize::after{content:'';position:absolute;top:0;bottom:0;left:3px;width:2px;background:transparent;transition:background .12s}
+  #conversation-resize:hover::after,#conversation-resize:focus-visible::after,body.resizing-conversation #conversation-resize::after{background:#6688da}
+  #conversation-resize:focus-visible{outline:2px solid #6688da;outline-offset:0}
+  body.resizing-conversation,body.resizing-conversation *{cursor:col-resize!important;user-select:none!important}
+}
+
+/* The agenda lives in the app's one header, next to Talk and Review, because the scope, the agenda
+   and the health check were always the same question: what are we talking about, and how much of it
+   does staves actually have. The percentage is of the interview's own question list — never of the
+   workflow, which nobody can measure. */
+/* Shut, the way in sits at the right of the app bar. Open, the conversation's chrome is the card's own
+   top row -- it belongs to the card, not to an application bar that spans the canvas too. */
+#staves-topbar{position:absolute;right:0;top:0;height:42px;box-sizing:border-box;
+  display:flex;align-items:center;gap:8px;padding:0 10px;justify-content:flex-end;margin:0}
+#staves-topbar.is-open #staves-agenda{margin-right:auto}
+#staves-topbar.is-open{position:static;width:auto;height:42px;flex:none;justify-content:flex-start;
+  gap:8px;padding:0 8px 0 12px;background:#e4ebf2;border-bottom:1px solid #cbd6e1;
+  border-top-left-radius:11px;border-top-right-radius:11px;border-left:0}
+/* on the card the chrome is dark-on-light, not light-on-dark */
+#staves-topbar.is-open .agenda-word{color:#78828f}
+#staves-topbar.is-open .agenda-of{color:#252a34}
+#staves-topbar.is-open #staves-agenda:hover,
+#staves-topbar.is-open #staves-agenda[aria-expanded="true"]{background:#d8e2ec}
+#staves-topbar.is-open .agenda-pct:not([data-band]){color:#8b94a3}
+#staves-topbar.is-open .agenda-pct[data-band="lo"]{color:#9a6a1c}
+#staves-topbar.is-open .agenda-pct[data-band="mid"]{color:#2455e6}
+#staves-topbar.is-open .agenda-pct[data-band="hi"]{color:#2f5d43}
+#staves-topbar.is-open #staves-tabs{background:#d7e1ea;border:1px solid #cbd6e1}
+#staves-topbar.is-open #staves-tabs button{color:#5d6676}
+#staves-topbar.is-open #staves-tabs button:hover{color:#252a34}
+#staves-topbar.is-open #staves-tabs button[aria-pressed="true"]{background:#fff;color:#252a34;box-shadow:0 1px 2px #1c304014}
+#staves-topbar.is-open #focus-back{color:#5d6676}
+#staves-topbar.is-open #focus-back:hover{background:#d8e2ec;color:#252a34}
+#staves-topbar.is-open #interview-pause{background:#d7e1ea;color:#31404d}
+#staves-topbar.is-open .staves-bar-count{background:#8d6635;color:#fff}
+#top{position:relative}
+/* The right slot is reserved at all times, whether it holds the way in or the conversation's own
+   controls. Constant, so nothing in the header shifts when the panel opens or closes, and the flow
+   can never expand underneath it. */
+body #top{padding-right:210px}
+#staves-agenda{flex:0 1 auto;min-width:0}
+#staves-topbar #focus-back,#staves-topbar #interview-pause{flex:none}
+#staves-topbar #focus-back{width:28px;height:28px;padding:0;justify-content:center;border:0;background:none;color:#a9b7c1}
+#staves-topbar #focus-back:hover{background:#43525c;color:#fff}
+#staves-topbar #interview-pause{height:26px;padding:0 9px;font-size:11px;border:0;background:#43525c;color:#e5eff3;border-radius:6px}
+/* nothing left in the panel's own header once stop and close move up */
+/* Scope, intention and the checkpoint are each hidden or empty most of the time. Padding on the band
+   itself meant it still drew 42px of nothing under the app bar, which read as a second empty header.
+   The band carries no padding of its own; its children space themselves when they have something. */
+body .real-conversation #focused-interview-header{padding:0;border-bottom:0;background:transparent;gap:0;display:block}
+body .real-conversation #focused-interview-header>*:not([hidden]):not(:empty){display:block;padding:8px 12px}
+body .real-conversation #focused-interview-header>#conversation-scope:not([hidden]){display:flex;align-items:center;gap:8px;
+  border-bottom:1px solid #dbe3ec}
+#staves-agenda{display:flex;align-items:center;gap:7px;height:28px;padding:0 8px;box-sizing:border-box;
+  border:0;border-radius:6px;background:none;cursor:pointer;font:inherit;max-width:214px;flex:0 1 auto;min-width:0}
+#staves-agenda:hover,#staves-agenda[aria-expanded="true"]{background:#42505a}
+#staves-agenda .agenda-word{font-size:9.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#a9b7c1;flex:none}
+#staves-agenda .agenda-of{font-size:12px;font-weight:600;color:#f0f5f8;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
+#staves-agenda .agenda-pct{font-size:12px;font-weight:700;flex:none;font-variant-numeric:tabular-nums}
+#staves-agenda .agenda-pct:not([data-band]){color:#93a3ae}
+#staves-agenda .agenda-pct[data-band="lo"]{color:#e3b569}
+#staves-agenda .agenda-pct[data-band="mid"]{color:#9bbcf0}
+#staves-agenda .agenda-pct[data-band="hi"]{color:#84c7a6}
+
+#staves-agenda-sheet{position:fixed;z-index:95;width:min(420px,calc(100vw - 16px));background:#fff;
+  border:1px solid #c7d1dd;border-radius:9px;box-shadow:0 16px 40px #17283a2e;padding:8px}
+#staves-agenda-sheet .agenda-count{margin:0 4px 7px;padding-bottom:7px;border-bottom:1px solid #eef1f6;
+  font-size:11.5px;color:#5d6676}
+#staves-agenda-sheet .agenda-count b{font-size:17px;font-weight:700;color:#252a34;font-variant-numeric:tabular-nums}
+#staves-agenda-sheet .agenda-count b{margin-right:5px}
+.agenda-row{display:flex;align-items:center;gap:9px;width:100%;box-sizing:border-box;padding:7px 6px;
+  border:0;border-radius:6px;background:none;cursor:pointer;font:inherit;text-align:left;min-height:32px}
+.agenda-row:hover{background:#eef3f8}
+.agenda-row .agenda-about{font-size:11.5px;font-weight:600;color:#252a34;flex:none;max-width:112px;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.agenda-row .agenda-q{font-size:11px;color:#5d6676;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.agenda-row .agenda-w{font-size:9.5px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;
+  border-radius:9px;padding:2px 7px;flex:none}
+.agenda-row[data-weight="changes"] .agenda-w{color:#7d5325;background:#f7edda}
+.agenda-row[data-weight="curious"] .agenda-w{color:#5d6676;background:#e9eef4}
+/* The five classes, each drawn in the two materials the board uses: solid is what the person said,
+   hatched is what staves supplied. One length split two ways, not progress toward an invented finish. */
+.agenda-classes{display:grid;gap:2px;margin:2px 0 4px}
+.agenda-class{display:flex;align-items:center;gap:10px;padding:6px 6px;border-radius:6px}
+.agenda-class:hover{background:#f4f7fb}
+.agenda-class>b{font-size:11.5px;font-weight:600;color:#252a34;width:72px;flex:none}
+.agenda-class>small{font-size:10.5px;color:#7c8694;width:78px;flex:none;text-align:right;font-variant-numeric:tabular-nums}
+.agenda-class[data-state="yours"]>small{color:#2f5d43}
+.agenda-class[data-state="mine"]>small{color:#8a6433}
+.agenda-class[data-state="blank"]>b,.agenda-class[data-state="blank"]>small{color:#a4adb8}
+.agenda-bar{flex:1;min-width:0;height:6px;border-radius:4px;background:#e7ecf2;overflow:hidden;display:flex}
+.agenda-bar>i{display:block;height:100%}
+.agenda-bar>.agenda-you{background:#3f6f54}
+.agenda-bar>.agenda-mine{background:repeating-linear-gradient(135deg,#e2d3b4 0 3px,#f2e9d8 3px 6px)}
+#staves-agenda-sheet .agenda-note{margin:8px 4px 2px;padding-top:8px;border-top:1px solid #eef1f6;
+  font-size:11px;line-height:1.5;color:#5d6676}
+
+/* Talk and Review live in the app header now. Lifted from the approved mock rather than re-derived:
+   a dark segmented switch on the dark bar, sized to the 42px header rather than a panel. */
+#staves-topbar #staves-tabs{display:inline-flex;gap:0;background:#29343c;border:0;border-radius:7px;padding:2px;
+  height:28px;box-sizing:border-box;flex:none;position:static;top:auto;margin:0;z-index:auto}
+#staves-topbar #staves-tabs button{all:unset;font-size:11px;font-weight:500;color:#a9b7c1;padding:0 10px;height:24px;
+  border-radius:5px;cursor:pointer;display:flex;align-items:center;gap:5px;box-sizing:border-box;white-space:nowrap}
+#staves-topbar #staves-tabs button:hover{color:#e5eff3}
+#staves-topbar #staves-tabs button[aria-pressed="true"]{background:#4b5a65;color:#fff}
+#staves-topbar #staves-tabs button svg{display:none}
+#staves-topbar #staves-tabs button:focus-visible{outline:2px solid #9bbcf0;outline-offset:1px}
+/* Both the way in and the conversation's own controls sit in the same slot at the right, out of the
+   flex flow, so opening or closing the panel never moves anything else in the header. The panel is
+   open and named in this bar; a second way into it is noise. */
+
+
+
+/* Review is a tab's content, not a dialog. The markup is reused from the board review sheet, so the
+   modal chrome it carries has to be undone rather than inherited into a 460px sidebar. */
+#conversation-panel .review-visual.review-in-panel{width:auto!important;max-width:none;background:transparent;
+  border:0;border-radius:0;box-shadow:none;padding:0;display:block}
+#conversation-panel .review-visual.review-in-panel .sh{padding:10px 12px 8px;font-size:12px;font-weight:600;
+  background:transparent;border:0}
+#conversation-panel .review-visual.review-in-panel .sb{padding:0 12px 12px;max-height:none;overflow:visible}
+#conversation-panel .review-visual.review-in-panel .review-object-card{width:auto;max-width:100%;box-sizing:border-box}
+
+/* The three counts are navigation between lists, not three headline figures. In a 460px panel they
+   were reading as the content itself -- which is how a tab showing "0, 0, 1" came across as random. */
+#conversation-panel .review-in-panel .review-counts{display:flex;gap:4px;padding:0 0 10px;border:0}
+#conversation-panel .review-in-panel .review-counts button{flex:1;min-width:0;display:flex;align-items:center;
+  gap:6px;min-height:30px;padding:0 8px;border:1px solid #d9e1ea;border-radius:7px;background:#fff;
+  font-size:11px;color:#5d6676;cursor:pointer;text-align:left}
+#conversation-panel .review-in-panel .review-counts button b{font-size:12px;font-weight:700;color:#252a34;flex:none}
+#conversation-panel .review-in-panel .review-counts button span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#conversation-panel .review-in-panel .review-counts button.active{border-color:#2455e6;background:#edf2ff;color:#1c3f9e}
+#conversation-panel .review-in-panel .review-counts button.active b{color:#1c3f9e}
+#conversation-panel .review-in-panel .review-empty{padding:28px 8px;text-align:center}
+#conversation-panel .review-in-panel .review-empty h4{margin:6px 0 4px;font-size:13px;font-weight:600;color:#252a34}
+#conversation-panel .review-in-panel .review-empty p{margin:0;font-size:11.5px;line-height:1.6;color:#5d6676}
+
+/* Shut, the bar holds one control: the thing people came to do, and a caret for everything else Staves
+   can be asked for. A readout of what staves knows was not a door -- it named a noun, truncated, and
+   counted something nobody had been told the meaning of. */
+#top .staves-split{display:inline-flex;height:28px;border-radius:7px;overflow:hidden;flex:none}
+#top .staves-split-main{border:0;background:#3563e9;color:#fff;font:inherit;font-size:12px;font-weight:600;
+  padding:0 12px;cursor:pointer;white-space:nowrap}
+#top .staves-split-main:hover{background:#2f59d4}
+#top .staves-split-more{display:inline-flex;align-items:center;gap:5px;border:0;border-left:1px solid #2c51bd;
+  background:#3563e9;color:#fff;padding:0 9px;cursor:pointer;font:inherit}
+#top .staves-split-more:hover{background:#2f59d4}
+#top .staves-split-caret{font-size:9px;line-height:1;opacity:.9}
+#top .staves-split-main:focus-visible,#top .staves-split-more:focus-visible{outline:2px solid #9bbcf0;outline-offset:-2px}
+/* The badge rides the caret, because that is where the waiting things are. */
+#top .staves-split #staves-topbar .staves-bar-count{background:#fff;color:#1c3f9e}
+.staves-bar-count{display:inline-flex;align-items:center;justify-content:center;min-width:18px;height:18px;
+  padding:0 5px;border-radius:9px;background:#d9ab5c;color:#2a2113;font-size:10.5px;font-weight:700;flex:none}
+#staves-topbar #staves-tabs button .staves-bar-count{height:16px;min-width:16px;font-size:10px}
+
+/* The panel is a card, not a slab wedged into the corner. It was designed and approved as something
+   that floats clear of the edges with a radius and a shadow, and shipped flush to the viewport with
+   square corners on three sides. --staves-panel-gap is the one number; the header column, the panel
+   and the resize handle all read from it so they cannot drift apart. */
+:root{--staves-panel-gap:12px}
+body #conversation-panel#conversation-panel{
+  right:var(--staves-panel-gap);
+  border:1px solid #c4d0dc;border-left:1px solid #c4d0dc;border-radius:12px;
+  box-shadow:0 18px 44px #1a2c4022,0 2px 6px #1a2c400f;
+  overflow:hidden}
+/* the first and last things inside have to follow the card's corners or they square them off again */
+
+body #conversation-panel#conversation-panel>*:last-child{border-bottom-left-radius:11px;border-bottom-right-radius:11px}
+body #conversation-panel#conversation-panel #iv{border-radius:11px}
+/* the header column lines up with the card's left edge, not the window's */
+#staves-topbar{right:var(--staves-panel-gap)}
+body:has(#conversation-panel.open) #conversation-resize{
+  right:calc(var(--staves-conversation-width,460px) + var(--staves-panel-gap) - 4px);
+  top:calc(42px + var(--staves-panel-gap));bottom:calc(var(--status-bar) + var(--staves-panel-gap))}
+body #top{padding-right:210px}
+
+/* The resize handle is 8px wide and the full height of the card, so a focus ring on its box drew a
+   solid accent bar down the card's edge. The indicator is a short grab line instead -- visible, and
+   the size of the thing you actually grab. */
+body #conversation-resize{outline:none!important;background:transparent}
+body #conversation-resize::after{content:'';position:absolute;left:3px;top:50%;transform:translateY(-50%);
+  width:2px;height:28px;border-radius:2px;background:#b6c3d0;opacity:0;transition:opacity .12s}
+body #conversation-resize:hover::after{opacity:1}
+body #conversation-resize:focus-visible::after{opacity:1;background:#2455e6;height:44px}
+@media (prefers-reduced-motion:reduce){body #conversation-resize::after{transition:none}}
+
+/* The way into Staves sits in the bottom-right, under the card it opens. The label presses through to
+   the conversation; the caret beside it holds Review, the agenda and the model, and carries the count
+   because that is where those things are. */
+:root{--staves-fab-size:44px}
+#staves-fab{position:fixed;right:12px;bottom:calc(var(--status-bar) + 12px);z-index:88;
+  display:inline-flex;align-items:stretch;height:var(--staves-fab-size);border-radius:999px;
+  background:#3563e9;box-shadow:0 6px 18px #2447b840,0 1px 3px #1c30402b}
+#staves-fab button{border:0;background:none;color:#fff;cursor:pointer;padding:0;font:inherit}
+#staves-fab .staves-fab-main{display:inline-flex;align-items:center;gap:9px;padding:0 15px 0 17px;
+  border-radius:999px 0 0 999px;font-size:12.5px;font-weight:600;white-space:nowrap}
+#staves-fab .staves-fab-more{display:inline-flex;align-items:center;gap:7px;padding:0 14px;min-width:34px;justify-content:center;
+  border-left:1px solid #2c51bd;border-radius:0 999px 999px 0}
+#staves-fab .staves-fab-main:hover,#staves-fab .staves-fab-more:hover{background:#2f59d4}
+#staves-fab .staves-fab-main:focus-visible,#staves-fab .staves-fab-more:focus-visible{outline:2px solid #fff;outline-offset:-3px}
+#staves-fab .staves-fab-mark{width:17px;height:20px;display:block;flex:none}
+#staves-fab .staves-fab-caret{display:grid;place-items:center}
+#staves-fab .staves-fab-caret svg{width:15px;height:15px;display:block}
+#staves-fab .staves-bar-count{background:#fff;color:#1c3f9e}
+/* the card stops above the button rather than covering it, so the two read as one object */
+body #conversation-panel#conversation-panel.open.real-conversation{
+  bottom:calc(var(--status-bar) + 24px + var(--staves-fab-size))!important}
+/* This corner belongs to the button. The map and the feedback pill move rather than pile up on it. */
+body #mm{left:12px;right:auto;bottom:76px}
+body #feedback-open{right:14px;bottom:4px;left:auto;padding:3px 11px;font-size:11px;
+  border-radius:999px;background:#ffffffd9;box-shadow:none;z-index:41}
+@media (max-width:700px){#staves-fab{display:none}}
+
+/* Changing what the conversation is about is a change of subject, so it reads as one: the transcript
+   and the scope fade through rather than being swapped underneath the person. */
+#conversation-panel #ivlines,#conversation-panel .review-visual,
+#staves-fab .staves-fab-label,#staves-agenda .agenda-of,#staves-agenda .agenda-pct{transition:opacity .18s ease}
+#conversation-panel.scope-changing #ivlines,#conversation-panel.scope-changing .review-visual{opacity:0}
+#conversation-panel.scope-changing .agenda-of,#conversation-panel.scope-changing .agenda-pct{opacity:.35}
+@media (prefers-reduced-motion:reduce){
+  #conversation-panel #ivlines,#conversation-panel .review-visual,
+  #staves-fab .staves-fab-label,#staves-agenda .agenda-of,#staves-agenda .agenda-pct{transition:none}
+  #conversation-panel.scope-changing #ivlines,#conversation-panel.scope-changing .review-visual{opacity:1}
+}
+
+/* Reading size is a reading preference, not a layout setting: it scales the transcript only, and it
+   persists per person rather than per board. */
+#conversation-panel{--staves-chat-scale:1}
+#conversation-panel #ivlines .line .say,#conversation-panel #ivlines .line .who,
+#conversation-panel #ivlines .aa,#conversation-panel #ivlines .qq{
+  font-size:calc(12px * var(--staves-chat-scale));line-height:calc(19.8px * var(--staves-chat-scale))}
+#staves-text-size{display:inline-flex;align-items:center;gap:1px;height:24px;border-radius:6px;
+  background:#d7e1ea;border:1px solid #cbd6e1;padding:2px;flex:none}
+#staves-text-size button{all:unset;width:22px;height:20px;display:grid;place-items:center;border-radius:4px;
+  font-size:11px;font-weight:700;color:#5d6676;cursor:pointer}
+#staves-text-size button:hover{background:#fff;color:#252a34}
+#staves-text-size button:focus-visible{outline:2px solid #3157d5;outline-offset:1px}
+#staves-text-size button[disabled]{opacity:.4;cursor:default}
+#staves-text-size .staves-text-size-now{font-size:9.5px;font-weight:600;color:#5d6676;min-width:26px;text-align:center}
+
+/* How much is being asked for, said plainly and changeable in place. The three counts are shown at once
+   so switching is an informed choice rather than a surprise. */
+.agenda-asks{display:flex;gap:4px;margin:0 4px 6px}
+.agenda-ask{flex:1;min-width:0;display:grid;gap:1px;padding:6px 8px;border:1px solid #d9e1ea;border-radius:7px;
+  background:#fff;cursor:pointer;font:inherit;text-align:left}
+.agenda-ask:hover{border-color:#8fa6c8}
+.agenda-ask b{font-size:11px;font-weight:600;color:#252a34;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.agenda-ask small{font-size:10px;color:#7c8694;font-variant-numeric:tabular-nums}
+.agenda-ask[aria-pressed="true"]{border-color:#2455e6;background:#edf2ff}
+.agenda-ask[aria-pressed="true"] b,.agenda-ask[aria-pressed="true"] small{color:#1c3f9e}
+.agenda-ask:focus-visible{outline:2px solid #3157d5;outline-offset:1px}
+.agenda-means{margin:0 4px 8px;font-size:10.5px;line-height:1.45;color:#7c8694}
+
+/* Who writes the first draft, said as the two things that actually differ. */
+.agenda-stance{margin:0 4px 8px}
+.agenda-draft{display:grid;gap:1px;width:100%;box-sizing:border-box;padding:7px 9px;border:1px solid #d9e1ea;
+  border-radius:7px;background:#fff;cursor:pointer;font:inherit;text-align:left}
+.agenda-draft:hover{border-color:#8fa6c8}
+.agenda-draft b{font-size:11px;font-weight:600;color:#252a34}
+.agenda-draft small{font-size:10px;line-height:1.4;color:#7c8694}
+.agenda-draft[aria-pressed="true"]{border-color:#8d6635;background:#fdf7ee}
+.agenda-draft[aria-pressed="true"] b{color:#7d5325}
+.agenda-draft:focus-visible{outline:2px solid #3157d5;outline-offset:1px}
+
+/* Openings — where the work could be done differently. It replaces the transcript when its tab is on,
+   because it is a place you go to rather than a panel beside the conversation. */
+#staves-openings{flex:1;min-height:0;overflow:auto;padding:14px;display:grid;gap:11px;align-content:start}
+.openings-head{margin:0 2px 3px;font-size:13px;line-height:1.55;color:#4a5765}
+.opening{background:#fff;border:1px solid #d8e1ea;border-radius:11px;padding:14px 15px}
+.opening-kind{display:inline-block;font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;margin-bottom:7px;color:#7c5427}
+.opening[data-kind="mechanical"] .opening-kind{color:#3c4d8a}
+.opening[data-kind="waiting"] .opening-kind{color:#2f5d43}
+.opening h4{margin:0 0 6px;font-size:15px;font-weight:600;line-height:1.35;color:#1d2734}
+.opening-says{margin:0 0 10px;font-size:13px;line-height:1.55;color:#54626f}
+.opening-facts{display:flex;flex-wrap:wrap;gap:8px 20px;margin:0 0 10px;padding:10px 12px;background:#f6f9fb;border-radius:8px}
+.opening-facts>div{flex:1 1 160px;min-width:0}
+.opening-facts small{display:block;font-size:9.5px;font-weight:700;letter-spacing:.06em;color:#8b97a4;margin-bottom:3px}
+.opening-facts span{font-size:12.5px;line-height:1.45;color:#3d4b59}
+.opening-evidence{margin:0 0 11px;font-size:11.5px;line-height:1.5;color:#7c8894}
+.opening-actions{display:flex;gap:7px;flex-wrap:wrap}
+.opening-actions button{height:30px;font-size:12px}
+.opening-actions button:first-child{background:#3157d5;border-color:#3157d5;color:#fff}
+.staves-bar-count.is-openings{background:#2f5d43}
+
+/* Walking the flow. Everything recedes except the hop you are standing on: the board is the subject,
+   and a walk whose subject is dimmed along with everything else is just a form. */
+body.walking #tracks .clip:not(.walk-here){opacity:.3;filter:saturate(.35)}
+body.walking #tracks .wires .w,body.walking .beat{opacity:.12}
+body.walking #tracks .clip{transition:opacity .22s ease,filter .22s ease}
+#tracks .clip.walk-here{box-shadow:0 0 0 3px #3157d5,0 0 0 10px #3157d51f;z-index:6}
+body.walking #conversation-panel{display:none!important}
+body.walking #staves-fab{display:none!important}
+
+#staves-walk{position:fixed;left:50%;transform:translateX(-50%);bottom:18px;z-index:70;width:min(720px,calc(100vw - 32px));
+  background:#fff;border:1px solid #c3cfdb;border-radius:14px;box-shadow:0 18px 46px #16243333;padding:13px 15px;display:grid;gap:9px}
+.walk-rail{display:flex;gap:3px;align-items:center}
+.walk-rail>i{flex:1;height:4px;border-radius:3px;background:#dde4ec}
+.walk-rail>i.done{background:#3f6f54}
+.walk-rail>i.now{background:#3157d5}
+.walk-body>small{display:block;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#8b97a4;margin-bottom:4px}
+.walk-q{margin:0;font-size:17px;font-weight:600;line-height:1.35;color:#1d2734}
+#walk-answer{width:100%;box-sizing:border-box;min-height:42px;max-height:130px;resize:vertical;font:inherit;font-size:14px;
+  border:1px solid #bacbdb;border-radius:10px;padding:10px 12px;background:#fff;color:#252a34}
+#walk-answer:focus{outline:2px solid #3157d5;outline-offset:1px}
+.walk-actions{display:flex;gap:7px;align-items:center}
+.walk-actions button{height:32px;font-size:12.5px}
+.walk-actions button.primary{background:#3157d5;border-color:#3157d5;color:#fff}
+.walk-actions button:last-child{margin-left:auto}
+@media(prefers-reduced-motion:reduce){body.walking #tracks .clip{transition:none}}

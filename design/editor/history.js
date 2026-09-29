@@ -1,0 +1,66 @@
+/* Optional design history dock. Selecting history never changes the canvas. */
+const designHistoryPanel=document.createElement('section');
+designHistoryPanel.id='design-history-panel';designHistoryPanel.hidden=true;
+designHistoryPanel.setAttribute('aria-labelledby','design-history-title');document.body.append(designHistoryPanel);
+const designHistoryButton=document.createElement('button');designHistoryButton.type='button';designHistoryButton.id='design-history-button';designHistoryButton.className='history-taskbar-button';designHistoryButton.setAttribute('aria-controls','design-history-panel');designHistoryButton.onclick=()=>designHistoryPanel.hidden?openDesignHistory():closeDesignHistory();document.querySelector('#shell-status')?.append(designHistoryButton);
+let designHistoryRequest=0,designHistoryData=null,designHistorySelection=null;
+function paintDesignHistoryIdentity(){designHistoryButton.textContent='History';designHistoryButton.setAttribute('aria-label','Toggle design history');designHistoryButton.setAttribute('aria-expanded',String(!designHistoryPanel.hidden));}
+function closeDesignHistory(){designHistoryRequest++;designHistoryPanel.hidden=true;document.body.classList.remove('history-open');paintDesignHistoryIdentity();designHistoryButton.focus();}
+function designHistorySafeUrl(value){try{const url=new URL(value);return ['https:','http:'].includes(url.protocol)&&!url.username&&!url.password?url.href:null;}catch{return null;}}
+function historyLink(value,label){const url=designHistorySafeUrl(value);return url?'<a href="'+esc(url)+'" target="_blank" rel="noopener noreferrer">'+esc(label||value)+'</a>':'<span>'+esc(label||value)+'</span>';}
+function historyFrame(body){designHistoryPanel.innerHTML='<header><div><h2 id="design-history-title">Design history</h2><span>Alternatives & development</span></div><div class="history-key"><span>◇ Baseline</span><span>□ Assessment</span><span>○ Case</span><span>⑂ Git</span></div><button type="button" class="bt q" data-history-close aria-label="Collapse design history">Collapse ↓</button></header>'+body;designHistoryPanel.querySelector('[data-history-close]').onclick=closeDesignHistory;}
+async function openDesignHistory(){const board=state.name,request=++designHistoryRequest;designHistoryPanel.hidden=false;document.body.classList.add('history-open');paintDesignHistoryIdentity();historyFrame('<p class="history-message" role="status">Loading design history…</p>');try{const response=await fetch('./design-history?board='+encodeURIComponent(board),{signal:AbortSignal.timeout(15000)});if(!response.ok)throw new Error(await response.text());const history=await response.json();if(request!==designHistoryRequest||designHistoryPanel.hidden||board!==state.name)return;designHistoryData=history;paintHistoryGraph();}catch(error){if(request!==designHistoryRequest||designHistoryPanel.hidden)return;historyFrame('<p class="history-message" role="alert">'+esc(error.message||'Could not load history')+' <button class="bt" data-history-retry>Retry</button></p>');designHistoryPanel.querySelector('[data-history-retry]').onclick=openDesignHistory;}}
+const renderBeforeDesignHistory=render;render=function(){renderBeforeDesignHistory();paintDesignHistoryIdentity();if(designHistoryData&&designHistoryData.selectedBoard!==state.name&&!designHistoryPanel.hidden)openDesignHistory();};paintDesignHistoryIdentity();
+designHistoryPanel.addEventListener('keydown',event=>{if(event.key==='Escape'){event.stopPropagation();closeDesignHistory();}});
+
+/** Ordinal chronology: spacing separates saved events, it does not encode elapsed time. */
+function historyGraphModel(history){
+  const byId=new Map(history.nodes.map(node=>[node.id,node])),ordered=[],seen=new Set();
+  const visit=node=>{if(seen.has(node.id))return;seen.add(node.id);ordered.push(node);history.nodes.filter(child=>child.baseline?.sourceBoard===node.id).forEach(visit);};
+  history.nodes.filter(node=>!byId.has(node.baseline?.sourceBoard)).forEach(visit);history.nodes.forEach(visit);
+  const events=[];const add=(node,kind,label,at,revision,detail)=>events.push({key:node.id+':'+kind+':'+events.length,board:node.id,kind,label,at:at||'',revision,detail});
+  for(const node of ordered){
+    add(node,node.baseline?(node.baseline.pinned?'baseline':'legacy'):'start',node.baseline?(node.baseline.pinned?'Pinned baseline':'Unpinned source'):'Source design',node.baseline?.capturedAt,'',node.baseline||{});
+    for(const a of node.assessments||[]){add(node,'assessment',a.intent==='implement'?'Implementation request':'Assessment',a.at,a.sourceRevision,a);for(const r of a.returns||[])add(node,'report','Agent report',r.at,a.sourceRevision,{...r,requestId:a.id});}
+    for(const c of node.walkthroughs||[])add(node,'case',c.name,c.at,c.sourceRevision,c);
+    for(const a of node.acceptances||[])add(node,'accept','Design accepted',a.at,a.seq,a);
+    for(const d of node.development||[])add(node,'git',d.options.pullRequest?'PR · '+d.options.pullRequest.state+' reported':d.options.git.branch||'Git snapshot',d.recordedAt,d.designRevision,d);
+  }
+  const times=[...new Set(events.map(event=>event.at).filter(Boolean))].sort();
+  for(const event of events){event.column=event.at?times.indexOf(event.at)+1:0;event.row=ordered.findIndex(node=>node.id===event.board);}
+  const last=times.length+1;
+  for(const node of ordered){add(node,'head',node.id===history.selectedBoard?'You are here':'Latest design','',node.revision,node);Object.assign(events.at(-1),{column:last,row:ordered.indexOf(node)});}
+  return {nodes:ordered,events,columns:last+1};
+}
+function paintHistoryGraph(){
+  const model=historyGraphModel(designHistoryData);designHistoryData.graph=model;
+  const pitch=Math.max(56,Math.min(112,((designHistoryPanel.clientWidth||1440)-520)/model.columns)),rowHeight=76,width=Math.max(420,model.columns*pitch+50),height=model.nodes.length*rowHeight+24,x=e=>36+e.column*pitch,y=e=>40+e.row*rowHeight;
+  let paths='';
+  for(const node of model.nodes){const list=model.events.filter(e=>e.board===node.id),first=list[0],head=list.at(-1);paths+='<path d="M '+x(first)+' '+y(first)+' H '+x(head)+'"/>';const parent=model.nodes.findIndex(n=>n.id===node.baseline?.sourceBoard);if(parent>=0&&parent!==first.row)paths+='<path class="history-fork" d="M '+Math.max(18,x(first)-28)+' '+(40+parent*rowHeight)+' Q '+x(first)+' '+(40+parent*rowHeight)+' '+x(first)+' '+(40+parent*rowHeight+Math.sign(first.row-parent)*22)+' V '+y(first)+'"/>';}
+  for(const event of model.events.filter(e=>e.kind==='accept')){const from=model.nodes.findIndex(n=>n.id===event.detail.alternativeBoard);if(from>=0&&from!==event.row)paths+='<path class="history-accepted" d="M '+(x(event)-24)+' '+(40+from*rowHeight)+' Q '+x(event)+' '+(40+from*rowHeight)+' '+x(event)+' '+y(event)+'"/>';}
+  const symbols={start:'',baseline:'',legacy:'?',head:'',assessment:'□',report:'↳',case:'○',accept:'✓',git:'⑂'};
+  const graph='<div class="history-scroll"><div class="history-chart '+(pitch<100?'is-condensed':'')+'" style="width:'+width+'px;height:'+height+'px"><svg aria-hidden="true" width="'+width+'" height="'+height+'">'+paths+'</svg>'+model.events.map(e=>'<button type="button" class="history-point is-'+e.kind+'" data-history-key="'+esc(e.key)+'" style="left:'+x(e)+'px;top:'+y(e)+'px" aria-label="'+esc(model.nodes[e.row].title+' · '+e.label+(e.revision?' · revision '+e.revision:''))+'"><span class="history-symbol">'+symbols[e.kind]+'</span><span class="history-point-label">'+esc(e.label)+'</span></button>').join('')+'</div></div>';
+  historyFrame('<div class="history-workspace"><div class="history-map"><div class="history-map-caption">Saved milestones '+(designHistoryData.warnings?.length?'<button class="history-warning" data-history-warnings>'+designHistoryData.warnings.length+' history notice(s)</button>':'')+'<span>Ordered by capture · not a time scale</span></div><div class="history-lanes"><div class="history-lane-names">'+model.nodes.map(node=>'<button class="history-lane '+(node.id===state.name?'is-current':'')+'" data-history-board="'+esc(node.id)+'" style="height:'+rowHeight+'px"><b>'+esc(node.title)+'</b><small>'+(node.baseline?'Alternative':'Current design')+' · r'+node.revision+'</small></button>').join('')+'</div>'+graph+'</div></div><aside class="history-inspector" aria-label="Selected history item"></aside></div>');
+  designHistoryPanel.querySelector('[data-history-warnings]')?.addEventListener('click',()=>{designHistoryPanel.querySelector('.history-inspector').innerHTML='<h3>History notices</h3><ul>'+designHistoryData.warnings.map(message=>'<li>'+esc(message)+'</li>').join('')+'</ul>';});
+  designHistoryPanel.querySelectorAll('[data-history-key]').forEach(button=>button.onclick=()=>selectHistoryEvent(button.dataset.historyKey));
+  designHistoryPanel.querySelectorAll('[data-history-board]').forEach(button=>button.onclick=()=>selectHistoryEvent(model.events.find(e=>e.board===button.dataset.historyBoard&&e.kind==='head').key));
+  const selected=model.events.find(e=>e.key===designHistorySelection)||model.events.find(e=>e.board===state.name&&e.kind==='head')||model.events[0];if(selected)selectHistoryEvent(selected.key);
+}
+function selectHistoryEvent(key){
+  const event=designHistoryData.graph.events.find(e=>e.key===key);if(!event)return;designHistorySelection=key;
+  designHistoryPanel.querySelectorAll('[data-history-key]').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.historyKey===key)));
+  const node=designHistoryData.nodes.find(n=>n.id===event.board),d=event.detail;
+  let content='<small class="history-eyebrow">'+esc(event.kind==='head'?'Design':event.kind)+'</small><h3>'+esc(event.label)+'</h3><p>'+esc(node.title)+'</p>';
+  if(event.revision)content+='<span class="history-pill">Design r'+esc(event.revision)+'</span>';
+  if(d.status)content+='<span class="history-pill">'+esc(d.status)+'</span>';
+  if(event.at)content+='<p class="history-muted">'+esc(new Date(event.at).toLocaleString())+'</p>';
+  if(event.kind==='head'||event.kind==='baseline'||event.kind==='legacy'||event.kind==='start'){content+='<p class="history-muted">'+(node.baseline?'Based on '+esc(node.baseline.sourceBoard)+'. '+(node.baseline.pinned?'The captured baseline stays fixed.':'Legacy baseline is unpinned.'):'The intended workflow design.')+'</p>';if(node.parentAvailable===false)content+='<p>Source is unavailable in this connection.</p>';if(node.availability==='available'&&node.id!==state.name)content+='<a class="bt history-open-design" href="./?board='+encodeURIComponent(node.id)+'">Open this design ↗</a>';if(node.baseline?.pinned)content+='<button class="bt" data-history-compare>Compare with source</button>';}
+  if(event.kind==='case')content+='<p>Model check · '+esc(d.outcome)+'. No software was executed.</p>';
+  if(event.kind==='assessment')content+='<p>'+esc(d.intent==='implement'?'Implementation requested for this captured design.':'Assessment requested; implementation is a separate decision.')+'</p>';
+  if(event.kind==='report')content+='<p>Agent-reported findings · '+esc(d.statusAtReceipt)+' at receipt.</p><ul>'+(d.tests||[]).map(t=>'<li>'+esc(t.scope)+' · '+esc(t.status)+' (reported)</li>').join('')+'</ul>';
+  if(event.kind==='accept')content+='<p>Accepted intended design from '+esc(d.alternativeBoard)+'. Code merge and deployment remain separate.</p>';
+  if(event.kind==='git'){const g=d.options.git,pr=d.options.pullRequest;content+='<p class="history-git-branch">⑂ '+esc(g.branch||'Detached HEAD')+'</p><code>'+esc(g.head?.slice(0,10)||'No commit yet')+'</code><p>'+esc(g.dirty.isDirty?'Uncommitted changes reported':'Clean checkout reported')+'</p>'+(pr?'<p>'+historyLink(pr.url,'PR · '+pr.state+' (reported)')+'</p>':'')+'<p class="history-muted">Repository state reported by '+esc(d.recordedBy)+'.</p>';}
+  content+='<details><summary>References & capture details</summary><pre>'+esc(JSON.stringify({board:node.id,revision:event.revision,...d},null,2))+'</pre></details>';
+  const inspector=designHistoryPanel.querySelector('.history-inspector');inspector.innerHTML=content;inspector.scrollTop=0;inspector.querySelector('[data-history-compare]')?.addEventListener('click',()=>compareHistoryDesign(node.id,key));
+}
+async function compareHistoryDesign(board,key){const inspector=designHistoryPanel.querySelector('.history-inspector');try{const response=await fetch('./alternative-review?board='+encodeURIComponent(board));if(!response.ok)throw new Error(await response.text());const review=await response.json();if(designHistoryPanel.hidden||designHistorySelection!==key)return;const value=v=>v===undefined?'Not specified':typeof v==='string'?v:JSON.stringify(v);inspector.innerHTML='<small class="history-eyebrow">Comparison</small><h3>Changes from baseline</h3><p>'+review.changes.length+' changes · '+review.conflicts.length+' source conflicts</p>'+review.changes.map(change=>'<section><b>'+esc(change.field==='*'?'Item':change.field)+'</b><del>'+esc(value(change.before))+'</del><ins>'+esc(value(change.after))+'</ins></section>').join('')+'<a class="bt" href="./?board='+encodeURIComponent(board)+'">Open alternative to review</a>'; }catch(error){if(designHistorySelection===key&&!designHistoryPanel.hidden)inspector.insertAdjacentHTML('beforeend','<p role="alert">'+esc(error.message)+'</p>');}}

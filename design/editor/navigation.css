@@ -1,0 +1,65 @@
+.editor-viewbar{display:flex;align-items:center;gap:14px;padding:10px 18px;border-bottom:1px solid var(--line);background:#fff;flex-shrink:0}.editor-modes{display:flex;gap:3px;padding:3px;background:#f3f4f6;border-radius:7px}.editor-modes button{border:0;background:transparent;height:30px;color:var(--t2)}.editor-modes button.active{background:white;box-shadow:0 1px 4px #17223015;color:var(--t1)}.track-legend{display:flex;gap:12px;margin-right:auto;font-size:10px;color:var(--t2)}.track-legend span::before{content:'';display:inline-block;width:7px;height:7px;background:var(--type-color);border-radius:50%;margin-right:5px}.track>.h{border-left:3px solid var(--type-color);background:var(--type-tint)}.track>.h>.ic{color:var(--type-color)}.track .clip{border-left-color:var(--type-color)}.labelled-control{width:auto!important;padding:0 9px!important;gap:5px;font-size:11px}.labelled-control svg{width:14px!important;height:14px!important}#zoom-readout{font-size:10px;min-width:35px;text-align:center;color:var(--t2)}#tl>.ph{flex-shrink:0;gap:7px}#tl>.ph>.seg{display:flex;align-items:center;flex-shrink:0}#tls{touch-action:none}body[data-editor-mode="overview"] .clip .pin,body[data-editor-mode="overview"] .clip .qm,body[data-editor-mode="overview"] .clip .pg,body[data-editor-mode="overview"] .clip .tl,body[data-editor-mode="overview"] .clip .port,body[data-editor-mode="overview"] .clip .port-in,body[data-editor-mode="overview"] .track-add,body[data-editor-mode="overview"] .track-edit{display:none!important}body[data-editor-mode="overview"] .lane{background-image:none}body[data-editor-mode="overview"] .beat{opacity:.25}body[data-editor-mode="overview"] .clip{box-shadow:none}#epics-view{display:none;overflow:auto;flex:1;padding:24px;background:var(--b0)}body[data-editor-mode="epics"] #epics-view{display:block}body[data-editor-mode="epics"] #tls,body[data-editor-mode="epics"] #mm{display:none!important}.epic-empty{max-width:420px;margin:70px auto;text-align:center}.epic-empty>svg{width:40px;height:40px;color:var(--t2)}.epic-empty h2{font-size:22px;margin:20px 0 10px}.epic-empty p{font-size:13px;color:var(--t2);line-height:1.6;margin-bottom:20px}.epic-card{background:white;border:1px solid var(--line);border-radius:10px;margin:0 auto 20px;max-width:1050px;overflow:hidden}.epic-card>header{display:flex;align-items:center;justify-content:space-between;padding:18px 20px}.epic-card h2{font-size:18px;margin:0}.epic-role{display:grid;grid-template-columns:180px 1fr;border-top:1px solid var(--line);min-height:64px}.epic-role>span{font-size:11px;display:flex;align-items:center;gap:8px;padding:12px 15px;border-left:3px solid var(--type-color)}.epic-role>span svg{flex:none;width:17px;color:var(--type-color)}.epic-role>div{display:flex;flex-wrap:wrap;align-items:center;gap:10px;padding:12px}.epic-role button{font-size:12px;white-space:normal;height:auto;min-height:32px;text-align:left;max-width:260px}.epic-card footer{display:flex;align-items:center;justify-content:space-between;padding:12px 20px;border-top:1px solid var(--line);font-size:11px;color:var(--t2)}#epic-focus:empty{display:none}#epic-focus{display:flex;align-items:center;gap:15px;padding:8px 18px;background:#f6f8fb;font-size:12px}.outside-epic{opacity:.25!important}#epic-members{display:grid;max-height:320px;overflow:auto;margin-top:14px}.epic-choice{display:flex!important;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--line)}.epic-choice input{width:16px!important;min-width:16px;height:16px}.epic-choice small{margin-left:auto;max-width:150px;font-size:10px;color:var(--t2)}.epic-choice span{font-size:12px}.epic-sheet{width:640px}.epic-sheet #epic-name{width:100%;margin-top:10px}.epic-sheet #epic-error{font-size:12px;color:var(--alert)}#ws.full #tl{grid-column:1/-1!important}#ws.full .editor-toolbar{display:none}body.outline-open #ws.full{grid-template-columns:1fr!important}
+@media(max-width:1050px){.track-legend{display:none}.editor-modes{margin-right:auto}.editor-viewbar{gap:8px;padding:8px 12px}body.has-selection #tl>.ph .editor-toolbar{max-width:230px}body.has-selection #tl>.ph{flex-wrap:wrap;height:auto;min-height:46px;padding:6px 10px}.epic-role{grid-template-columns:135px 1fr}}
+@media(max-width:650px){.editor-modes button{font-size:11px;padding:0 7px}.editor-modes button svg{display:none}.editor-viewbar>.editor-button{font-size:11px}.epic-role{grid-template-columns:1fr}.epic-role>span{background:#f8f9fb}.labelled-control{padding:0 5px!important}}
+
+.labelled-control{display:inline-flex!important;align-items:center;white-space:nowrap}
+
+body:has(#veil.show) #peek{display:none!important}#ws.full{grid-template-rows:0 1fr!important}#ws.full #top{display:none!important}
+body:has(#conversation-panel.open) #peek,body:has(#iv.show) #peek{display:none!important}.conversation-model-gate{padding:24px;border:1px solid var(--line);border-radius:9px;background:#fff}.conversation-model-gate h3{font-size:19px}.conversation-model-gate p{font-size:13px;line-height:1.6;color:var(--t2);max-width:55ch}.conversation-model-gate #conversation-model-actions{display:flex;gap:10px;margin-top:20px}.review-map-track.person{border-left-color:#8c593b}.review-map-track.agent{border-left-color:#3d6a63}.review-map-track.system{border-left-color:#576c90}.review-map-track.outside{border-left-color:#7c688f}
+.review-visual{max-height:calc(100vh - 40px);display:flex;flex-direction:column;overflow:hidden}.review-visual>.sh,.review-visual>.sf{flex-shrink:0}.review-visual>.sb{min-height:0;overflow:auto}.review-map-track>span{max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.review-map-title{flex-wrap:wrap}
+
+body.canvas-navigating #peek{display:none!important}#peek{max-height:min(340px,55vh);overflow:auto}#tracks{transform:none!important}
+
+/* Video-editor geometry: typography and performer lanes never magnify. */
+#tracks{zoom:1!important;transform:none!important;min-width:100%}
+/* A lane was 88px tall to hold a 40px node — 23 above and 25 below, more air than content, so
+   barely half the tracks fit on screen. Sized to the thing it holds; the taller tasks view keeps
+   its own height below, because there it is carrying 70px of content and needs the room. */
+.track{height:64px!important;grid-template-columns:200px minmax(0,1fr)}
+.track>.h{width:200px;position:sticky;left:0;z-index:8;box-sizing:border-box}
+/* The add-a-track row shares the rail's 200px column, so it pins with it. Left out, it was the
+   one thing in that column that slid away when the canvas scrolled sideways. */
+.drop-row>.h{width:200px;position:sticky;left:0;z-index:8;box-sizing:border-box;background:var(--b1)}
+.track .clip{box-sizing:border-box;top:12px;height:40px;gap:6px;min-width:0}
+.clip>.t{overflow:hidden;text-overflow:ellipsis;min-width:0;flex:1}
+.clip>.ic,.clip>.k{flex-shrink:0}
+body[data-detail="outcomes"] .clip>.tl,body[data-detail="outcomes"] .clip>.pin,body[data-detail="outcomes"] .clip>.qm,body[data-detail="outcomes"] .clip>.ic,body[data-detail="outcomes"] .clip>.k{display:none}
+body[data-detail="outcomes"] .clip{padding:0 5px;font-size:10px;background:var(--type-tint);box-shadow:none}
+body[data-detail="outcomes"] .wires .w:not(.near):not(.selw){opacity:.13}
+body[data-detail="outcomes"] .beat{opacity:.15}
+body[data-detail="tasks"] .track{height:88px!important}
+body[data-detail="tasks"] .clip{top:9px;height:70px;align-items:flex-start;padding-top:9px}
+body[data-detail="tasks"] .clip>.port,body[data-detail="tasks"] .clip>.port-in{top:27px}
+.canvas-tasks{position:absolute;left:7px;right:7px;bottom:6px;display:flex;gap:5px;overflow:auto;height:25px;scrollbar-width:thin}
+.canvas-task{flex:none;max-width:165px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;border:1px solid var(--line);background:var(--type-tint);border-radius:3px;padding:3px 7px;font-size:10px;cursor:grab}
+.canvas-tasks .editor-button{height:22px;padding:0 5px;font-size:10px;flex:none}
+.epic-span{border-radius:3px;background:transparent;border-style:dashed;z-index:2}
+.epic-span .rt{font-size:11px;max-width:360px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+body[data-detail="outcomes"] .epic-span{background:color-mix(in srgb,var(--c) 5%,transparent)}
+.stages>div:first-child{position:sticky;left:0;background:#fff;z-index:9}
+
+/* Quiet at rest; the whole connection graph remains one control away. */
+.connection-visibility{height:30px;max-width:190px;border:1px solid var(--line);border-radius:5px;background:#fff;color:var(--t2);font:inherit;font-size:11px;padding:0 7px}
+.track .lane{background-image:none}.beat{opacity:.18}
+body[data-connections="focus"] .wires .w{visibility:hidden;pointer-events:none}
+body[data-connections="focus"] .wires .w.context-wire,body[data-connections="focus"] .wires .w.selw{visibility:visible;pointer-events:stroke;opacity:.7!important}
+body[data-connections="none"] .wires .w{visibility:hidden;pointer-events:none}
+body[data-connections="all"] .wires .w{opacity:.3}
+body[data-connections="all"] .wires .w.context-wire{opacity:.85!important}
+/* These were already hidden until hover, but opacity does not give the space back: two buttons and
+   their gaps held 66px of a 200px rail at all times, leaving 74px for names like "Reference
+   registries (Wikidata, GLEIF, SEC, Canadian registries)". Out of flow, so the name gets the rail
+   and the buttons still appear in the same place on hover or keyboard focus.
+   No position declaration here: the rail above is position:sticky, which is already a containing
+   block for absolute children. Adding relative anchored the buttons and un-pinned the rail, so the
+   track names scrolled away the moment the canvas moved sideways. */
+.track .track-add,.track .track-edit{opacity:0;position:absolute;top:50%;transform:translateY(-50%);background:var(--type-tint,#fff);border-radius:6px;transition:opacity .12s ease}
+.track .track-edit{right:8px}.track .track-add{right:34px}
+.track:hover .track-add,.track:hover .track-edit,.track:focus-within .track-add,.track:focus-within .track-edit{opacity:1}
+/* Something has to give when the buttons are showing; shorten the name rather than cover it. */
+.track:hover>.h>div,.track:focus-within>.h>div{padding-right:56px}
+.track .clip .port,.track .clip .port-in{opacity:0!important}.track .clip:hover .port,.track .clip:hover .port-in,.track .clip:focus-within .port,.track .clip:focus-within .port-in,.track .clip.sel .port,.track .clip.sel .port-in,.connecting .clip .port,.connecting .clip .port-in{opacity:.8!important}
+.track .clip>.tl{display:none}.track .clip>.pin,.track .clip>.qm{transform:scale(.8)}
+@media(pointer:coarse){.track .track-add,.track .track-edit{opacity:1}.track .clip .port,.track .clip .port-in{opacity:.7!important}}
+
+.sheet{max-width:calc(100vw - 24px)!important}.sheet .sf{flex-wrap:wrap}.editor-viewbar{flex-wrap:wrap}.editor-modes{flex-shrink:0}
