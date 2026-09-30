@@ -290,7 +290,7 @@ Analyze a proposed transfer between a human role and an agent track. Returns mov
 
 ### `staves_cut`
 
-Run the cut: group execution-level jobs into the jobs a person would name, by cutting at every human touchpoint, every place a person hands in, and every join. Returns the regions and the questions you must answer to name them.
+Optional grouping that changes the board. It groups execution steps between human touchpoints and joins, which can hide important automated decisions and handoffs. Use only when grouping improves the visible journey; do not use it as a routine finishing step or on confirmed work. Returns grouped regions and naming questions.
 
 | Argument | | What it is |
 | --- | --- | --- |

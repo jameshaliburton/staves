@@ -26,8 +26,9 @@ In order: names the board and its goal, puts the people and systems on tracks, t
 from the outside in — the person who asks, the person who receives, then the work between them.
 Machinery becomes tasks inside jobs rather than jobs of its own.
 
-Then it runs `staves_cut`, which folds execution steps into the jobs a person would name. That step
-is why the finished board reads as work rather than as a call graph.
+The agent checks that the main board shows the complete journey, including decisions, waits and recovery. Detailed mechanics sit inside jobs; consequential boundaries remain visible even when the same system performs both jobs.
+
+`staves_cut` is optional and changes the board. Use it only when grouping improves that view. The agent should inspect the rendered board and trace an ordinary case and an interrupted or returning case before calling the description ready.
 
 You will see each piece arrive on the board as it lands.
 

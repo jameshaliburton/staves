@@ -1,4 +1,16 @@
+export const HUMAN_READABLE_FLOW = `Human-readable flow is the first deliverable. Before detailing tasks, draw an end-to-end outline a collaborator can follow without opening every job. Keep consequential boundaries visible at the top level: a first usable result, a durable save, independent background work, publication, human review, waiting, recovery, continuation or settlement, and return through history or notifications when relevant. Choose only boundaries supported by the workflow; this is not a mandatory list of invented steps.
+
+A shared performer does not imply a single job. Reuse a track for the same responsible performer across multiple visible jobs. Separate roles only when responsibility or independent execution genuinely differs; do not invent agents to fill lanes. Name the beneficiary as a role; put what they need in the outcome.
+
+Keep decisions that change the route visible with named conditions and target jobs. Show waits, failures and bounded loops where they change the person's experience. Put retrieval mechanics and detailed checks inside jobs, but never hide the only explanation of a consequential handoff or branch in nested tasks or prose. Inputs and outputs describe data; decision exits describe routes. Neither substitutes for the other.
+
+Before reporting ready, inspect the rendered board when browser access is available, at its normal overview and an expanded job. Walk one ordinary case and one interrupted or returning case through the visible jobs. Check that another person can follow the sequence, branches and responsibilities without opening every card. If visual inspection is unavailable, report that limit and review the top-level structure explicitly. A task count or a clean structural review is not proof of readability.
+
+Grouping is optional and subordinate to this reader test. staves_cut changes the board; it is not a required finishing step. Do not apply it to an already purposeful outline merely because machinery lies between human touchpoints. Inspect proposed groups first, preserve consequential boundaries, and use proposals for confirmed work.`;
+
 export const PROTOCOL = `How to describe a system to staves — as the work people do, not as what the code does.
+
+${HUMAN_READABLE_FLOW}
 
 Before writing, call staves_access to understand the connection's board access and creation allowance. Scope the workflow in conversation. Reuse the requested existing board; only create boards within the allowance. Do not create a survey board by default, because it consumes an allowance before the useful board exists.
 
@@ -12,7 +24,7 @@ For a code-backed description, the order matters more than the rules. Code narra
 
 3. Now read the code: routes, prompts, cron and queue config, migrations, templates, every place a person types, chooses, approves or is emailed. You are looking for handoffs — moments where something changes hands between performers — not for functions.
 
-4. Jobs (staves_describe), from the outside in. Name a job by what a person has when it is done, in three to five words: "Admit the claim", "Find the owner", "Deliver the answer". The test: someone is waiting on it, and they are a person or an outside party, never a system. If the only thing waiting on a step is another step, it is not a job — it is a task inside one. Describe the human touchpoints first, then the jobs between them, then the machinery as tasks inside those jobs (parent). Words that mean you are describing code, not work: run, call, handle, process, invoke, fetch, poll, worker, queue, job row, payload, token, webhook, endpoint, cron, cache. Keep them in the rationale or in sources, never in the name.
+4. Jobs (staves_describe), from the outside in. Name a job by what a person has when it is done, in three to five words: "Admit the claim", "Find the owner", "Deliver the answer". The test: someone is waiting on it, and they are a person or an outside party, never a system. A step may remain a visible job when it changes the result, responsibility, availability or route for the ultimate human beneficiary, even if its immediate recipient is another system. Pure implementation mechanics belong inside jobs. Describe the human touchpoints first, then the jobs between them, then the machinery as tasks inside those jobs (parent). Words that mean you are describing code, not work: run, call, handle, process, invoke, fetch, poll, worker, queue, job row, payload, token, webhook, endpoint, cron, cache. Keep them in the rationale or in sources, never in the name.
 
 5. For every job: which files you read (sources); what starts it — something arrives, the previous job ends, a schedule, a person gets to it; what it takes and produces (artifacts — handoffs are drawn from these); what is different when it is done; who is waiting on it and what they do with it; what you would check. If the code decides something that determines whether a person gets what they wanted, that is a gate: the rule in words, and who answers for it — a person's track, or a rule with a named owner. Every exit gets a target; every loop gets a limit and a then-what.
 
@@ -24,7 +36,7 @@ For a code-backed description, the order matters more than the rules. Code narra
 
 9. Record implementation separately: unknown, planned, in-progress or implemented, with a note explaining the evidence and what remains unfinished. Missing means unknown. A confirmed description does not prove implementation. Keep planned work visible as ordinary jobs, not ghost jobs. Where the evidence does not say, say unknown and use staves_ask. Do not infer, do not smooth over, do not invent a person.
 
-10. When the machinery is in, run staves_cut. It folds execution steps into the jobs a person would name and asks you to name them. Name them by what the person on the far side has.
+10. Review the visible journey before grouping. Use staves_cut only when merging implementation mechanics improves readability without hiding consequential boundaries. It mutates the board; skip it when the outline already expresses the intended work. Preserve confirmed descriptions through proposals.
 
 11. Tell the person where the board is. It draws itself as you go. When they comment on the board, staves_comments lists what awaits your reply: answer each in place — say why it is or isn't a good idea, what is missing, what you would need — and propose a change with staves_propose when the comment calls for one.
 

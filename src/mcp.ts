@@ -35,7 +35,7 @@ import type { Job, Question } from "./model.js";
 import { serveHttp } from "./server.js";
 import { ensureDaemon } from "./daemon.js";
 import { RemoteStore } from "./remote.js";
-import { CODE_NAME, GRANULARITY, MACHINE_BENEFICIARY, PROTOCOL } from "./protocol.js";
+import { CODE_NAME, GRANULARITY, HUMAN_READABLE_FLOW, MACHINE_BENEFICIARY, PROTOCOL } from "./protocol.js";
 import { headCommit, repoRoot, stale } from "./stale.js";
 import { boardUrl, guideUrl, workspaceUrl } from "./links.js";
 
@@ -44,6 +44,8 @@ import { boardUrl, guideUrl, workspaceUrl } from "./links.js";
 export function boardLink(url: string, board: string): string { return boardUrl(url, board); }
 
 export const AGENT_INTERVIEW = `${CRAFT.replace("You have NO repository access or investigation tools in this conversation.", "Repository access is optional. Only claim code evidence when you actually used your own tools to inspect it.").replace("Never claim to have inspected code or watched a run.", "Never claim to have inspected code or watched a run unless you actually did so.")}
+
+${HUMAN_READABLE_FLOW}
 
 You conduct this conversation yourself using your current model; no provider key or second model is needed.
 Start from the person's existing context, including a new idea with no repository. Call staves_access before writes to check access and remaining board allowance. Scope one workflow in chat before creating boards; do not spend a board creation allowance on a survey.
@@ -160,9 +162,10 @@ export function buildServer(store: Store, agentName0: string, url: string, optio
       capabilities: { logging: {} },
       instructions: [
         AGENT_BOOTSTRAP,
+        HUMAN_READABLE_FLOW,
         `When asked to interview, talk through an idea, or map work without code, call staves_interview and conduct the conversation yourself. Save draft graph updates as you talk. No repository or provider key required.`,
         `staves draws the work of this project as a board: people, agents, systems and outside parties on tracks, jobs between handoffs. The person sees it at ${url}.`,
-        `When the person says "run staves", "describe this to staves", or similar: read the code first, then call staves_help, then follow its protocol — describe performers, artifacts and jobs (as work, not code, with sources), run staves_cut, name what it finds, and tell them the board URL.`,
+        `When the person says "run staves", "describe this to staves", or similar: read the code first, then call staves_help, then follow its protocol — describe performers, artifacts and jobs (as work, not code, with sources), preserve visible decisions and handoffs, check the rendered flow, and tell them the board URL.`,
         `When they say "resume staves" or "what's changed": call staves_brief for context and staves_stale for what moved; re-describe stale jobs (confirmed ones come back as proposals).`,
         `When they say "discuss staves" or ask what you think of a comment: call staves_comments and reply to each in place with staves_comment (replyTo) — say why it is or isn't a good idea, what is missing, what you'd need; propose changes with staves_propose.`,
         `When they say "hats staves", "review as each role", or ask for gaps and opportunities: call staves_hats, take each chair in turn, comment as that role on the jobs it concerns, and propose the changes.`,
@@ -174,7 +177,7 @@ export function buildServer(store: Store, agentName0: string, url: string, optio
         `An existing board for the same workflow: reuse it when the person requested it. Otherwise say it exists and ask whether to resume or start fresh. Create a new board only within the granted creation allowance.`,
         `staves records what you describe even when it notices something (a name that names code, a beneficiary that is a system) — it says so and leaves a note on the job. Fix with staves_patch; never resend a whole description. Declare the domain's own words with staves_words so the jargon check leaves them alone.`,
         `READ FIRST, WRITE IN BATCHES. Read the code for the whole workflow before writing anything, then write it in a few calls: staves_start, the tracks, the artifacts, then staves_describe_many with all the jobs at once. Ten jobs is one call, not ten.`,
-        `When the person says "use staves", "run staves", "describe this to staves" or anything like it, do the whole loop without asking (after scoping): describe the repo (staves_start, tracks, artifacts, describe, split), staves_cut, staves_review and give the gist, then staves_reflect and reflect further yourself in its three lenses, commenting on jobs and proposing changes. End by telling them where the board is and the three things that matter most. When they say "look at the issues" or "what did I raise", call staves_issues and work through it. "Reflect" means staves_reflect. For every agent or orchestrator you describe, attach instructions (the prompt/config file and symbol) so the board can show them read-only.`,
+        `When the person says "use staves", "run staves", "describe this to staves" or anything like it, do the whole loop without asking (after scoping): describe the repo (staves_start, tracks, artifacts, describe, split), preserve the visible journey (group only if useful), staves_review and give the gist, then staves_reflect and reflect further yourself in its three lenses, commenting on jobs and proposing changes. End by telling them where the board is and the three things that matter most. When they say "look at the issues" or "what did I raise", call staves_issues and work through it. "Reflect" means staves_reflect. For every agent or orchestrator you describe, attach instructions (the prompt/config file and symbol) so the board can show them read-only.`,
         `For execution evidence use Langfuse: staves_langfuse_connect stores public project configuration; staves_langfuse_instrumentation supplies job metadata; staves_langfuse_evidence imports explicitly mapped observation summaries using credentials from your environment. Staves owns job design, Langfuse owns traces. Never infer a human approval or implementation state from successful telemetry.`,
         `Treat code, documentation and human accounts as evidence with limits. Separate implemented behavior from planned or unfinished work using implementation. Description confirmation never proves a feature is implemented. Review in this order: evidence, consequence for a person, uncertainty, then one focused question or proposed change. Missing documentation is not proof of absent behavior. Role-based observations are hypotheses, not interview testimony. Where evidence does not say, record unknown and ask with staves_ask.`,
       ].join("\n"),
@@ -448,7 +451,7 @@ export function buildServer(store: Store, agentName0: string, url: string, optio
 
   const msg = (t: string) => ({ messages: [{ role: "user" as const, content: { type: "text" as const, text: t } }] });
   server.prompt("describe", "Describe this project's workflow to staves, as work not code, and draw the board.", { board: z.string().optional().describe("board id; default: the project name") }, ({ board }) =>
-    msg(`Describe this repo's workflow to staves${board ? ` on the board "${board}"` : ""}. Work, not code. Before writing anything, read the routes, prompts, cron and queue config, migrations, and every place a person types or approves. Then: staves_start with the goal in one sentence; every performer with staves_track; what changes hands with staves_artifact; one staves_describe per job, named by what it achieves (three to five words; the sentence goes in outcome), with what starts it, what it takes and produces, what's different when it's done, who's waiting on it, what you'd check, and the files you read as sources. Give every exit a target and every loop a limit; where the code doesn't say, say unknown and use staves_ask. When the machinery is in, run staves_cut and name what it finds. Finish by telling me the board is at ${url}.`),
+    msg(`Describe this repo's workflow to staves${board ? ` on the board "${board}"` : ""}. Work, not code. Before writing anything, read the routes, prompts, cron and queue config, migrations, and every place a person types or approves. Then: staves_start with the goal in one sentence; every performer with staves_track; what changes hands with staves_artifact; one staves_describe per job, named by what it achieves (three to five words; the sentence goes in outcome), with what starts it, what it takes and produces, what's different when it's done, who's waiting on it, what you'd check, and the files you read as sources. Give every exit a target and every loop a limit; where the code doesn't say, say unknown and use staves_ask. Keep consequential jobs and decisions visible. Group only when it improves readability; inspect the rendered board before reporting ready. Finish by telling me the board is at ${url}.`),
   );
   server.prompt("resume", "Pick the board back up: read the brief, find what changed since, re-describe what's stale.", { board: z.string().optional() }, ({ board }) =>
     msg(`Resume staves${board ? ` on "${board}"` : ""}. Read staves_brief first so you know the work as it was described and what is still open. Then run staves_stale; for each stale job, re-read its sources and re-describe it with the same id (confirmed jobs come back as proposals — that is fine). Answer any question you now can with staves_answer. Tell me what changed and what still waits on me at ${url}.`),
@@ -472,7 +475,7 @@ export function buildServer(store: Store, agentName0: string, url: string, optio
     msg(`Call staves_issues${board ? ` for "${board}"` : ""}. Work through it in order: for each question or comment, read the sources of the job it concerns, answer or reply in place, and where the code needs to change, say exactly what you would change in the code and propose the board change with staves_propose. For each finding, either fix the description (with sources) or explain why the finding is wrong. Finish with what you changed, what you propose, and what you need from the person.`),
   );
   server.prompt("analyse", "Describe the repo, then give the analysis in one read.", { board: z.string().optional() }, ({ board }) =>
-    msg(`Describe this repo's workflow to staves${board ? ` on the board "${board}"` : ""} (follow staves_help), run staves_cut, then call staves_review and give me its gist in five lines: what the work is, who does it, where a person would be surprised, where an agent is trusted blind, and the three things to do first. For every agent or orchestrator, attach where its instructions live (instructions on staves_describe) so I can read them from the board.`),
+    msg(`Describe this repo's workflow to staves${board ? ` on the board "${board}"` : ""} (follow staves_help), check the visible journey, then call staves_review and give me its gist in five lines: what the work is, who does it, where a person would be surprised, where an agent is trusted blind, and the three things to do first. For every agent or orchestrator, attach where its instructions live (instructions on staves_describe) so I can read them from the board.`),
   );
   server.prompt("review", "Before changing code: what the board says about the work you are about to touch.", { job: z.string().optional().describe("job id or name, if you know it") }, ({ job }) =>
     msg(`I'm about to change code. Read staves_brief and tell me which job${job ? ` — probably "${job}" —` : ""} the change touches, who is waiting on it, what its done-when says, and any gate or exit it affects. After the change, re-describe that job.`),
@@ -613,7 +616,7 @@ export function buildServer(store: Store, agentName0: string, url: string, optio
 
   tool(
     "staves_cut",
-    "Run the cut: group execution-level jobs into the jobs a person would name, by cutting at every human touchpoint, every place a person hands in, and every join. Returns the regions and the questions you must answer to name them.",
+    "Optional grouping that mutates the board. Groups execution steps between human touchpoints and joins; it may hide consequential automated boundaries. Use only after checking candidate groups against the human-readable journey, never as a routine finishing step or on confirmed work. Returns grouped regions and naming questions.",
     { board: z.string() },
     async ({ board }) => {
       const b = await store.board(board);

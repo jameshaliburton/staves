@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import { HUMAN_READABLE_FLOW } from "./protocol.js";
 import { connectThroughBrowser } from "./device-connect.js";
 import { detectAgents, runAgentListener } from "./agent-runner.js";
 import { decideProposal, formatReview, listReview, resolveBoard, resolveListen } from "./review.js";
@@ -129,7 +130,7 @@ unfinished implementation as planned or in progress rather than describing inten
 behaviour. Where the code cannot tell you something, use \`staves_ask\` instead of guessing — an open
 question on the board is worth more than a confident invention.
 
-Run \`staves_cut\` when you are done. It folds execution steps into the jobs a person would name.
+${HUMAN_READABLE_FLOW}
 
 ## Reading before writing
 
