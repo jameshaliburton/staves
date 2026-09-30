@@ -53,3 +53,26 @@
 .segset .segopt:focus-visible { outline: 2px solid var(--acc, #2455e6); outline-offset: 1px; }
 .segset .segopt i { flex: none; opacity: .75; }
 .segset .segopt[aria-checked="true"] i { opacity: 1; color: var(--acc, #2455e6); }
+
+/* Job metadata is prose: let long values wrap and determine the row height. */
+#stage .chip {
+  display: inline-block;
+  height: auto;
+  min-height: 28px;
+  max-width: 100%;
+  box-sizing: border-box;
+  padding: 4px 10px 4px 8px;
+  line-height: 1.45;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  text-align: left;
+  vertical-align: top;
+}
+#stage .chip > svg {
+  display: inline-block;
+  vertical-align: -0.125em;
+  margin-right: 6px;
+}
+#stage .chip > span {
+  margin-right: 0.3em;
+}
