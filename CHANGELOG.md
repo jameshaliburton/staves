@@ -1,3 +1,10 @@
+# 0.45.3 — readable workflows and editor layout
+
+- Keep consequential workflow steps, decisions and returns visible when agents model work; grouping is optional and must preserve the human-readable flow.
+- Let job metadata and source references wrap without overlapping.
+- Clarify unconfirmed-description review and its keyboard action.
+- Keep the minimap above track labels and size the canvas to include the final jobs.
+
 # 0.45.2 — correct the example source link
 
 - Cite the release workflow commit rather than its annotated tag object, so the source link resolves on GitHub.

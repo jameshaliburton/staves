@@ -1,7 +1,7 @@
 {
   "name": "@staves/cli",
-  "version": "0.45.2",
-  "description": "Describe work shared by people, agents and systems \u2014 from your code, from an interview, or by hand \u2014 in the open Staves format, and keep it true. An MCP server for Claude Code, Cursor and Codex, a web app, and one HTML file.",
+  "version": "0.45.3",
+  "description": "Describe work shared by people, agents and systems — from your code, from an interview, or by hand — in the open Staves format, and keep it true. An MCP server for Claude Code, Cursor and Codex, a web app, and one HTML file.",
   "license": "Apache-2.0",
   "type": "module",
   "bin": {
