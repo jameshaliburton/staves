@@ -169,7 +169,9 @@ timeline=function(){
     });
     lane.querySelectorAll('.beat').forEach((beat,i)=>beat.style.left=(X0+(i+1)*COL*detailZoom-12)+'px');
   });
-  const worldWidth=Math.max($('#tls').clientWidth,...$$('.clip[data-job]').map(c=>c.offsetLeft+c.offsetWidth+240));
+  // Include the actual sticky-label rail, whose width can change with editor scale.
+  const tracksLeft=$('#tracks').getBoundingClientRect().left;
+  const worldWidth=Math.max($('#tls').clientWidth,...$$('.clip[data-job]').map(c=>c.getBoundingClientRect().right-tracksLeft+80));
   $('#tracks').style.width=worldWidth+'px';
   groupTracks();decorate();paintNavigation();selbar();
   requestAnimationFrame(()=>{

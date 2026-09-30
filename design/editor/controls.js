@@ -46,6 +46,29 @@
       chip.classList.toggle('chip-acts', acts);
       chip.classList.toggle('chip-fact', !acts);
     }
+    for (const marker of document.querySelectorAll('.clip .by')) {
+      const name = marker.closest('.clip')?.querySelector('.t')?.textContent || 'this job';
+      const label = 'Review unconfirmed details for ' + name;
+      marker.setAttribute('role', 'button');
+      marker.setAttribute('tabindex', '0');
+      marker.setAttribute('aria-label', label);
+      marker.setAttribute('aria-haspopup', 'dialog');
+      marker.setAttribute('data-tip', label);
+      if (marker.textContent !== 'Review') marker.textContent = 'Review';
+    }
+    const review = document.querySelector('#pop .settle');
+    if (review) {
+      const heading = review.querySelector(':scope > b');
+      const explanation = review.querySelector(':scope > span');
+      if (heading?.textContent === 'I made this up') {
+        heading.textContent = 'Review this description';
+        explanation.textContent = 'These details have not been confirmed by a person. Confirm only the details you have checked, or discuss a correction. This does not mark the work implemented or complete.';
+        review.setAttribute('role', 'dialog');
+        review.setAttribute('aria-label', 'Review unconfirmed description details');
+        const all = review.querySelector('[data-all] span');
+        if (all) all.textContent = 'Confirm all listed details';
+      }
+    }
     roving();
   };
   // Coalesce, but never wait on a frame: a backgrounded tab paints no frames, and a chip that has

@@ -97,3 +97,26 @@
 #stage .instr > .ih > .ro svg { flex: none; }
 #stage .instr .sum,
 #stage .instr pre { overflow-wrap: anywhere; }
+
+/* Reviewing description provenance is an action, not a completion checkbox. */
+.clip .by {
+  width: auto;
+  height: auto;
+  min-height: 24px;
+  padding: 3px 7px;
+  box-sizing: border-box;
+  border-radius: 6px;
+  background: var(--b1, #fff);
+  color: var(--t2, #55606a);
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1.4;
+  display: inline-flex;
+  align-items: center;
+  white-space: nowrap;
+}
+.clip .by:focus-visible { outline: 2px solid var(--acc, #2455e6); outline-offset: 2px; }
+
+/* Keep sticky canvas labels below sibling overlays such as the minimap. */
+#tls { isolation: isolate; }
