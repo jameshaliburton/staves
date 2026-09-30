@@ -76,3 +76,24 @@
 #stage .chip > span {
   margin-right: 0.3em;
 }
+
+/* Source paths and provenance need their own rows in the narrow inspector. */
+#stage .instr > .ih {
+  display: grid;
+  grid-template-columns: 14px minmax(0, 1fr);
+  height: auto;
+  min-height: 34px;
+  padding: 10px 12px;
+  gap: 8px;
+  line-height: 1.45;
+}
+#stage .instr > .ih > .path,
+#stage .instr > .ih > .ro {
+  grid-column: 1 / -1;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+#stage .instr > .ih > .grow { display: none; }
+#stage .instr > .ih > .ro svg { flex: none; }
+#stage .instr .sum,
+#stage .instr pre { overflow-wrap: anywhere; }
